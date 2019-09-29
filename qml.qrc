@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Page1Form.ui.qml</file>
+        <file>Page2Form.ui.qml</file>
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>dom1slajd1.jpg</file>
+        <file>Alarm.qml</file>
+        <file>AlarmForm.ui.qml</file>
+        <file>Shortcuts.qml</file>
+        <file>ShortcutsForm.ui.qml</file>
+        <file>Splash.qml</file>
+        <file>SplashForm.ui.qml</file>
+        <file>Lights.qml</file>
+        <file>LightsForm.ui.qml</file>
+        <file>Heating.qml</file>
+        <file>HeatingForm.ui.qml</file>
+        <file>Gates.qml</file>
+        <file>GatesForm.ui.qml</file>
+    </qresource>
+</RCC>
