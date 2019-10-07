@@ -6,6 +6,7 @@ Page {
     id: page
     width: 1280
     height: 680
+    property alias heatRefreshButton: heatRefreshButton
     property alias multiSetter: multiSetter
     property alias multiSetterSaveButton: multiSetterSaveButton
     property alias garderoba1Check: garderoba1Check
@@ -604,14 +605,27 @@ Page {
 
     Column {
         id: column
-        x: 1027
-        y: 28
-        anchors.verticalCenterOffset: 0
+        x: 1020
+        y: 150
+        width: 230
+        height: 430
+        anchors.verticalCenterOffset: -52
         anchors.verticalCenter: parent.verticalCenter
         spacing: 53
 
         Button {
+            id: heatRefreshButton
+            x: 43
+            objectName: "heatRefreshButton"
+            width: 200
+            height: 60
+            text: qsTr("Odśwież")
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        Button {
             id: heatStateButton
+            objectName: "heatStateButton"
             width: 200
             height: 60
             text: qsTr("Zastosuj")
@@ -630,6 +644,7 @@ Page {
 
             ComboBox {
                 id: modeSetter
+                objectName: "heatModeSetter"
                 width: 200
                 height: 60
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -644,7 +659,7 @@ Page {
 
             SpinBox {
                 id: multiSetter
-                objectName: "multiSetter"
+                objectName: "heatMultiSetter"
                 width: 230
                 height: 78
                 Layout.preferredHeight: 78

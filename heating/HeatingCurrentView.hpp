@@ -3,19 +3,22 @@
 #include <QString>
 #include <QObject>
 #include <QDebug>
+#include <QComboBox>
 
 #include <vector>
 #include <memory>
 
+#include <../common/subsystems/heating/HeatingDictionary.hpp>
+
 class RoomSetting : public QObject
 {
 public:
-    RoomSetting(QObject*parent, QString roomId);
+    RoomSetting(QObject* parent, QObject* rootObject, QString roomId);
     ~RoomSetting() = default;
 
     void setCurrentTemperature(double temp);
-
     void setSetterTemperature(quint16 setTemp);
+    quint16 getSetterTemperature();
 
     void checkForMultiSetter();
     bool isCheckedForMultiSetter();
@@ -29,13 +32,25 @@ public:
     QString id;
 };
 
-class Heating : public QObject
+class HeatingProfile: public QObject
+{
+public:
+    HeatingProfile(QObject* parent, QObject* rootObject);
+    ~HeatingProfile() = default;
+
+    HeatingProfileType getCurrentProfile();
+    void setCurrentProfile(HeatingProfileType profile);
+private:
+    QObject* profileObject;
+};
+
+class HeatingCurrentView : public QObject
 {
     Q_OBJECT
 
 public:
-    Heating(QObject *rootView);
-    ~Heating() = default;
+    HeatingCurrentView(QObject *parent, QObject *rootView);
+    ~HeatingCurrentView() = default;
 
     void setRoomCurTemp(const QString& roomId, double temperature);
 

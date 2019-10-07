@@ -18,5 +18,7 @@
         <file>HeatingForm.ui.qml</file>
         <file>Gates.qml</file>
         <file>GatesForm.ui.qml</file>
+        <file>HeatingModes.qml</file>
+        <file>HeatingModesForm.ui.qml</file>
     </qresource>
 </RCC>

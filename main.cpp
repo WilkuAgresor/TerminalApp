@@ -6,13 +6,15 @@
 #include <QtDebug>
 #include <QObject>
 #include <QPushButton>
+#include <QNetworkDatagram>
+#include <MainApp.hpp>
 
-#include <backend.hpp>
-#include <HeatingView.hpp>
+#include <heating/HeatingCurrentView.hpp>
 
 int main(int argc, char *argv[])
 {
-    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));  
+    qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -20,23 +22,18 @@ int main(int argc, char *argv[])
     QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    qmlRegisterType<BackEnd>("terminal.backend", 1, 0, "BackEnd");
+    QScopedPointer<MainApplication> mainApp(new MainApplication(&app));
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("mainApp", mainApp.data());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 
+
     qDebug() << "rootObjects size:" <<engine.rootObjects().size();
 
-//    QObject::connect(heating, SIGNAL(buttonClicked(QString)), &salonSet, SLOT(clicked(QString)));
-
-    Heating heating(engine.rootObjects().first());
-
-    heating.setRoomCurTemp("salon", 28);
-
-    heating.setRoomSetterTemperature("salon", 2800);
-
+    mainApp->initiate(engine.rootObjects().first());
 
     return app.exec();
 }
