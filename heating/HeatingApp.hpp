@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <../common/subsystems/heating/UpdateCurTemp.hpp>
+#include <../common/subsystems/heating/HeatingZoneSettings.hpp>
 #include <heating/HeatingCurrentView.hpp>
 
 
@@ -13,7 +13,7 @@ public:
 
     void handleMessage(const Message& message);
 private:
-    void handleStatusUpdateMessage(const HeatStatusMessage& message);
+ //   void handleStatusUpdateMessage(const HeatStatusMessage& message);
 
     QObject* mRootObject;
     HeatingCurrentView* mCurrentView;

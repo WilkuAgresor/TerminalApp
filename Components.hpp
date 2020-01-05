@@ -24,7 +24,19 @@ struct Components
         return *mHeatingApp;
     }
 
+    DataInitPhase getDataInitPhase() const
+    {
+        return mDataInitPhase;
+    }
+
+    void setDataInitPhase(DataInitPhase value)
+    {
+        mDataInitPhase = value;
+    }
+
 private:
+    DataInitPhase mDataInitPhase = DataInitPhase::UNINITIALIZED;
+
     QObject* mRootObject;
     Sender* mSender;
     HeatingApp* mHeatingApp;

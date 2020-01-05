@@ -13,6 +13,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../common/subsystems/topology/topologyMessages.cpp \
+    heating/ZoneSetting.cpp \
         main.cpp \
     heating/HeatingCurrentView.cpp \
     heating/HeatingApp.cpp \
@@ -32,12 +34,12 @@ SOURCES += \
     ../common/messages/replyMessage.cpp \
     Receiver.cpp \
     MessageHandler.cpp \
-    ../common/subsystems/heating/UpdateCurTemp.cpp
+    ../common/subsystems/heating/HeatingZoneSettings.cpp
 
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+QML_IMPORT_PATH = qml/heating
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
@@ -48,6 +50,7 @@ else: unix:!android: target.path = /home/pi/
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ../common/subsystems/topology/topologyMessages.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
     MainApp.hpp \
@@ -70,5 +73,10 @@ HEADERS += \
     Components.hpp \
     MessageHandler.hpp \
     ../common/subsystems/heating/HeatingDictionary.hpp \
-    ../common/subsystems/heating/UpdateCurTemp.hpp
+    ../common/subsystems/heating/HeatingZoneSettings.hpp \
+    heating/ZoneSetting.hpp
+
+DISTFILES += \
+    parter.png \
+    pietro.png
 

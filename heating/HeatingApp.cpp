@@ -17,23 +17,24 @@ void HeatingApp::handleMessage(const Message &message)
     switch(message.getHeader().getType())
     {
     case MessageType::HEAT_STATUS_UPDATE:
-        handleStatusUpdateMessage(static_cast<const HeatStatusMessage&>(message));
+        qDebug() << "status message: "<<message.toString();
+       // handleStatusUpdateMessage(static_cast<const HeatStatusMessage&>(message));
         break;
     default:
         qDebug()<< "unsupported message type in HEATING subsystem";
     }
 }
 
-void HeatingApp::handleStatusUpdateMessage(const HeatStatusMessage &message)
-{
-    auto payload = message.payload();
+//void HeatingApp::handleStatusUpdateMessage(const HeatStatusMessage &message)
+//{
+//    auto payload = message.payload();
 
-    qDebug() << "heating status update message";
-    for(auto& status: payload.mStatusList)
-    {
-        double temperature = status.mTemperature;
-        temperature /= 100; //set 2 digit precision
-        mCurrentView->setRoomCurTemp(status.mRoomId, temperature);
-    }
-    //mHeatingProfile->setCurrentProfile(payload.mCurrentProfile);
-}
+//    qDebug() << "heating status update message";
+//    for(auto& status: payload.mZoneSettings)
+//    {
+//        double temperature = status.mSetTemperature;
+//        temperature /= 100; //set 2 digit precision
+//        mCurrentView->setRoomCurTemp(status.mZoneId, temperature);
+//    }
+//    //mHeatingProfile->setCurrentProfile(payload.mCurrentProfile);
+//}

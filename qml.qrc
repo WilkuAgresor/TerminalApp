@@ -14,11 +14,19 @@
         <file>SplashForm.ui.qml</file>
         <file>Lights.qml</file>
         <file>LightsForm.ui.qml</file>
-        <file>Heating.qml</file>
-        <file>HeatingForm.ui.qml</file>
         <file>Gates.qml</file>
         <file>GatesForm.ui.qml</file>
         <file>HeatingModes.qml</file>
         <file>HeatingModesForm.ui.qml</file>
+        <file>qml/heating/tempSetter/HeatMultiSetter.qml</file>
+        <file>qml/heating/tempSetter/HeatMultiSetterForm.ui.qml</file>
+        <file>qml/heating/tempSetter/HeatRightPanel.qml</file>
+        <file>qml/heating/tempSetter/HeatRightPanelForm.ui.qml</file>
+        <file>qml/heating/tempSetter/TempSetter.qml</file>
+        <file>qml/heating/tempSetter/TempSetterForm.ui.qml</file>
+        <file>qml/heating/HeatingSetWidget.qml</file>
+        <file>qml/heating/HeatingSetWidgetForm.ui.qml</file>
+        <file>qml/heating/HeatingCurTemp.qml</file>
+        <file>qml/heating/HeatingCurTempForm.ui.qml</file>
     </qresource>
 </RCC>

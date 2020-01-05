@@ -1,19 +1,22 @@
 #include <heating/HeatingCurrentView.hpp>
+
 #include <../common/subsystems/heating/HeatingDictionary.hpp>
 
 HeatingCurrentView::HeatingCurrentView(QObject* parent, QObject * rootView)
     : QObject(parent)
 {
-    mHeatingObject = rootView->findChild<QObject*>("heatingForm", Qt::FindChildOption::FindChildrenRecursively);
-    mMultiSetterObject = rootView->findChild<QObject*>("heatMultiSetter", Qt::FindChildOption::FindChildrenRecursively);
+    mSetterObject = rootView->findChild<QObject*>("heatingSetWidget", Qt::FindChildOption::FindChildrenRecursively);
 
-    QObject::connect(mHeatingObject, SIGNAL(buttonClicked(QString)), this, SLOT(multiSelectClicked(QString)));
-    QObject::connect(mHeatingObject, SIGNAL(applyMultiSetter()), this, SLOT(applyMultiSetter()));
+    QObject::connect(mSetterObject, SIGNAL(applyMultiSetter(int)), this, SLOT(applyMultiSetter(int)));
+    QObject::connect(mSetterObject, SIGNAL(selectAll()), this, SLOT(setAllForMultiUpdate()));
+    QObject::connect(mSetterObject, SIGNAL(unselectAll()), this, SLOT(resetAllForMultiUpdate()));
+    QObject::connect(mSetterObject, SIGNAL(saveChanges()), this, SLOT(saveCurrentSettings()));
+    QObject::connect(mSetterObject, SIGNAL(resetChanges()), this, SLOT(resetCurrentSettings()));
 
     for(auto& roomId: sHeatingIds)
     {
         qDebug() << roomId;
-        auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(parent, mHeatingObject, roomId));
+        auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(parent, mSetterObject, roomId));
         mRoomSettings.emplace_back(std::move(roomSetting));
     }
 }
@@ -34,26 +37,55 @@ void HeatingCurrentView::setRoomSetterTemperature(const QString &roomId, quint16
         room->setSetterTemperature(setting);
 }
 
+//void HeatingCurrentView::setCurrentHeatingProfile(int id)
+//{
+//    qDebug() << "Current heating profile changed to: "<<id;
+//    mCurrentHeatingProfile = id;
+//}
+
 void HeatingCurrentView::multiSelectClicked(QString roomId)
 {
-    qDebug() << "multisetter clicked";
-    auto room = findRoomById(roomId);
-    if(room)
-        room->checkForMultiSetter();
+//    qDebug() << "multisetter clicked: " << roomId;
+//    auto room = findRoomById(roomId);
+//    if(room)
+//        room->checkForMultiSetter();
+}
+void HeatingCurrentView::setAllForMultiUpdate()
+{
+    qDebug() << "select all for multiupdate";
+    for(auto& zone: mRoomSettings)
+    {
+        zone->selectForMultiUpdate();
+    }
 }
 
-void HeatingCurrentView::applyMultiSetter()
+void HeatingCurrentView::resetAllForMultiUpdate()
 {
-    qDebug() << "applyMultisetter";
-
-
-    auto settingVariant = mMultiSetterObject->property("value");
-    quint16 setting = settingVariant.toUInt();
-
-    for(auto& room: mRoomSettings)
+    for(auto& zone: mRoomSettings)
     {
-        if(room->isCheckedForMultiSetter())
-            room->setSetterTemperature(setting);
+        zone->unselectForMultiUpdate();
+    }
+}
+
+void HeatingCurrentView::saveCurrentSettings()
+{
+    qDebug() << "save current settings to the DB";
+
+
+}
+
+void HeatingCurrentView::resetCurrentSettings()
+{
+    qDebug() << "Retrieve and Reload the settings from the DB";
+}
+
+void HeatingCurrentView::applyMultiSetter(int value)
+{
+    qDebug() << "applyMultisetter with value :" <<value;
+    for(auto& zone: mRoomSettings)
+    {
+        if(zone->isSelectedForMultiUpdate())
+            zone->setSetterTemperature(value);
     }
 }
 
@@ -69,63 +101,26 @@ RoomSetting *HeatingCurrentView::findRoomById(const QString &roomId)
     return nullptr;
 }
 
-RoomSetting::RoomSetting(QObject *parent, QObject *rootObject, QString roomId)
-    :QObject(parent), id(roomId)
-{
-    curTempObject = rootObject->findChild<QObject*>(roomId+HEATING_CUR_TEMP, Qt::FindChildOption::FindChildrenRecursively);
-    setterObject = rootObject->findChild<QObject*>(roomId+HEATING_SETTER, Qt::FindChildOption::FindChildrenRecursively);
-}
-
-void RoomSetting::setCurrentTemperature(double temp)
-{
-    QString text = QString().setNum(temp, 'f', 2);
-    text.append('\xB0');
-    text.append(" C");
-    curTempObject->setProperty("text", text);
-
-}
-
-void RoomSetting::setSetterTemperature(quint16 setTemp)
-{
-    setterObject->setProperty("value", setTemp);
-}
-
-quint16 RoomSetting::getSetterTemperature()
-{
-    return setterObject->property("value").toUInt();
-}
-
-void RoomSetting::checkForMultiSetter()
-{
-    mIsCheckedForMultiSetter = !mIsCheckedForMultiSetter;
-}
-
-bool RoomSetting::isCheckedForMultiSetter()
-{
-    return mIsCheckedForMultiSetter;
-}
-
 HeatingProfile::HeatingProfile(QObject *parent, QObject *rootObject)
     :QObject(parent)
 {
-    profileObject = rootObject->findChild<QObject*>("heatModeSetter", Qt::FindChildOption::FindChildrenRecursively);
 }
 
-HeatingProfileType HeatingProfile::getCurrentProfile()
-{
-    return static_cast<HeatingProfileType>(profileObject->property("currentIndex").toUInt());
-}
+//HeatingProfileType HeatingProfile::getCurrentProfile()
+//{
+//    return static_cast<HeatingProfileType>(profileObject->property("currentIndex").toUInt());
+//}
 
-void HeatingProfile::setCurrentProfile(HeatingProfileType profile)
-{
+//void HeatingProfile::setCurrentProfile(HeatingProfileType profile)
+//{
 
-    qDebug() << "current prifile before: "<< static_cast<quint16>(getCurrentProfile());
+//    qDebug() << "current prifile before: "<< static_cast<quint16>(getCurrentProfile());
 
-    if(profileObject)
-        profileObject->setProperty("currentIndex", static_cast<quint16>(profile));
-    else
-        qDebug() << "not found heating profile";
+//    if(profileObject)
+//        profileObject->setProperty("currentIndex", static_cast<quint16>(profile));
+//    else
+//        qDebug() << "not found heating profile";
 
 
-    qDebug() << "current prifile after: "<< static_cast<quint16>(getCurrentProfile());
-}
+//    qDebug() << "current prifile after: "<< static_cast<quint16>(getCurrentProfile());
+//}

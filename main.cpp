@@ -11,6 +11,18 @@
 
 #include <heating/HeatingCurrentView.hpp>
 
+#include <iostream>
+#include <QDateTime>
+
+static const QtMessageHandler QT_DEFAULT_MESSAGE_HANDLER = qInstallMessageHandler(0);
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString finalLogMessage = QDateTime::currentDateTime().toString(Qt::ISODateWithMs)+ " | " + msg;
+
+    (*QT_DEFAULT_MESSAGE_HANDLER)(type, context, finalLogMessage);
+}
+
 int main(int argc, char *argv[])
 {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));  
@@ -19,6 +31,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+    qInstallMessageHandler(myMessageOutput);
+
     QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
