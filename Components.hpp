@@ -10,7 +10,7 @@ struct Components
     Components(QObject* parent, QObject* rootObject):
         mRootObject(rootObject),
         mSender(new Sender(9999, parent)),
-        mHeatingApp(new HeatingApp(mRootObject, parent))
+        mHeatingApp(new HeatingApp(mRootObject, parent, this))
     {
     }
 
@@ -34,8 +34,23 @@ struct Components
         mDataInitPhase = value;
     }
 
+    QHostAddress getMasterAddress()
+    {
+        return mMasterControllerAddress;
+    }
+    void setMasterAddress(const QHostAddress& masterAddress)
+    {
+        mMasterControllerAddress = masterAddress;
+    }
+    void setMasterPort(int masterPort)
+    {
+        mMasterControllerPort = masterPort;
+    }
+
 private:
     DataInitPhase mDataInitPhase = DataInitPhase::UNINITIALIZED;
+    QHostAddress mMasterControllerAddress;
+    int mMasterControllerPort;
 
     QObject* mRootObject;
     Sender* mSender;

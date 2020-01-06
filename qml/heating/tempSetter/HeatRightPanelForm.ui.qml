@@ -3,18 +3,25 @@ import QtQuick.Controls 2.13
 
 Item {
     id: heatRightPanel
-    width: 200
-    height: 500
+    width: 220
+    height: 550
     property alias modeComboBox: modeComboBox
     property alias resetButton: resetButton
     property alias saveButton: saveButton
     property alias heatMultiSetter: heatMultiSetter
+    property alias busyIndicator: busyIndicator
+
+    Column {
+        id: column1
+        height: 550
+
+    anchors.fill: parent
 
     Column {
         id: column
-        height: 600
+        width: 220
+        height: 500
         spacing: 20
-        anchors.fill: parent
 
         Button {
             id: saveButton
@@ -47,9 +54,16 @@ Item {
 
             ComboBox {
                 id: modeComboBox
+
+                property alias profileList: profileList
+
+                editable: true
                 anchors.right: parent.right
                 //            anchors.top: button1.bottom
                 anchors.left: parent.left
+                model: ListModel {
+                    id: profileList
+                }
             }
         }
 
@@ -60,6 +74,13 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 0
         }
+    }
+    BusyIndicator {
+        id: busyIndicator
+        anchors.horizontalCenter: parent.horizontalCenter
+        running: true
+        visible: true
+    }
     }
 }
 

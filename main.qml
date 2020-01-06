@@ -23,7 +23,6 @@ ApplicationWindow {
         visible: true
         objectName: "splashScreen"
 
-
         property int password: 0
 
         function addAndValidate()
@@ -59,6 +58,8 @@ ApplicationWindow {
     StackLayout {
         id: mainLayout
         anchors.fill: parent
+        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+
         currentIndex: tabBar.currentIndex
         visible: false
         objectName: "mainLayout"
@@ -76,8 +77,14 @@ ApplicationWindow {
             objectName: "lightsForm"
 
         }
+        Page
+        {
 
-        SwipeView {
+        StackLayout {
+
+            Layout.alignment: Qt.AlignVCenter
+            id: heatLayout
+            currentIndex: heatTabBar.currentIndex
 
             HeatingCurTemp
             {
@@ -87,12 +94,27 @@ ApplicationWindow {
             HeatingSetWidget
             {
                 objectName: "heatingSetWidget"
-
             }
 
             HeatingModesForm {
                 objectName: "heatingModesForm"
             }
+        }
+        header: TabBar {
+            id: heatTabBar
+            contentHeight: 80
+            currentIndex: heatLayout.currentIndex
+
+            TabButton {
+                text: qsTr("Podgląd")
+            }
+            TabButton {
+                text: qsTr("Ustawienia temperatury")
+            }
+            TabButton {
+                text: qsTr("Ustawienia trybów pracy")
+            }
+        }
 
         }
 
@@ -104,7 +126,7 @@ ApplicationWindow {
 
     footer: TabBar {
         id: tabBar
-        contentHeight: 120
+        contentHeight: 80
         currentIndex: mainLayout.currentIndex
         visible: false
         objectName: "tabBar"

@@ -20,20 +20,20 @@ void MessageHandler::run()
 
     if(isHeatingMessage(messageType))
     {
-        mComponents.getHeatingApp().handleMessage(msg);
+        mComponents.getHeatingApp().handleMessage(msg, mDatagram.senderAddress(), mDatagram.senderPort());
     }
     else if(messageType == MessageType::TOPOLOGY_REQUEST_CHECKIN)
     {
         {
             qDebug() << "replying to checkin request";
             TopologyCheckInMessage message;
-            mComponents.getSender().send(mDatagram.senderAddress(), 2222, message.toData());
+            mComponents.getSender().send(mDatagram.senderAddress(), SERVER_LISTEN_PORT, message.toData());
         }
         if(mComponents.getDataInitPhase() == DataInitPhase::UNINITIALIZED)
         {
             qDebug() << "requesting data initiation from master node";
             TopologyRequestInitMessage initMessage;
-            mComponents.getSender().send(mDatagram.senderAddress(), 2222, initMessage.toData());
+            mComponents.getSender().send(mDatagram.senderAddress(), SERVER_LISTEN_PORT, initMessage.toData());
             mComponents.setDataInitPhase(DataInitPhase::READY);
         }
     }

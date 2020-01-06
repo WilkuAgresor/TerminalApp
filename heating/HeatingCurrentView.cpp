@@ -1,24 +1,28 @@
 #include <heating/HeatingCurrentView.hpp>
 
 #include <../common/subsystems/heating/HeatingDictionary.hpp>
+#include <Components.hpp>
+#include <../common/messages/replyMessage.hpp>
+#include <QtConcurrent/QtConcurrent>
 
-HeatingCurrentView::HeatingCurrentView(QObject* parent, QObject * rootView)
-    : QObject(parent)
+HeatingCurrentView::HeatingCurrentView(QObject* parent, QObject * rootView, Components* components)
+    : QObject(parent), mComponents(components)
 {
     mSetterObject = rootView->findChild<QObject*>("heatingSetWidget", Qt::FindChildOption::FindChildrenRecursively);
 
-    QObject::connect(mSetterObject, SIGNAL(applyMultiSetter(int)), this, SLOT(applyMultiSetter(int)));
-    QObject::connect(mSetterObject, SIGNAL(selectAll()), this, SLOT(setAllForMultiUpdate()));
-    QObject::connect(mSetterObject, SIGNAL(unselectAll()), this, SLOT(resetAllForMultiUpdate()));
-    QObject::connect(mSetterObject, SIGNAL(saveChanges()), this, SLOT(saveCurrentSettings()));
-    QObject::connect(mSetterObject, SIGNAL(resetChanges()), this, SLOT(resetCurrentSettings()));
+    QObject::connect(mSetterObject, SIGNAL(applyMultiSetter(int)), this, SLOT(applyMultiSetter(int)), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(selectAll()), this, SLOT(setAllForMultiUpdate()), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(unselectAll()), this, SLOT(resetAllForMultiUpdate()), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(saveChanges()), this, SLOT(saveCurrentSettings()), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(resetChanges()), this, SLOT(resetCurrentSettings()), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(selectedHeatingMode(int)), this, SLOT(handleProfileSelection(int)), Qt::QueuedConnection);
 
-    for(auto& roomId: sHeatingIds)
-    {
-        qDebug() << roomId;
-        auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(parent, mSetterObject, roomId));
-        mRoomSettings.emplace_back(std::move(roomSetting));
-    }
+//    for(auto& roomId: sHeatingIds)
+//    {
+//        qDebug() << roomId;
+//        auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(parent, mSetterObject, roomId));
+//        mRoomSettings.emplace_back(std::move(roomSetting));
+//    }
 }
 
 void HeatingCurrentView::setRoomCurTemp(const QString &roomId, double temperature)
@@ -35,6 +39,39 @@ void HeatingCurrentView::setRoomSetterTemperature(const QString &roomId, quint16
 
     if(room)
         room->setSetterTemperature(setting);
+}
+
+void HeatingCurrentView::addZoneSettingObject(const HeatZoneSetting &setting)
+{     
+    auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(this, mSetterObject, setting.mZoneId, setting.mSetTemperature, setting.mIsOn));
+    mRoomSettings.emplace_back(std::move(roomSetting));
+}
+
+void HeatingCurrentView::setProfileList(const std::vector<HeatProfile> &profiles)
+{
+    QMetaObject::invokeMethod(mSetterObject, "clearProfiles", Qt::DirectConnection);
+    for(auto& profile: profiles)
+    {
+        QMetaObject::invokeMethod(mSetterObject, "addProfile", Qt::DirectConnection,
+                                  Q_ARG(QVariant, QVariant(profile.mName)));
+    }
+    QMetaObject::invokeMethod(mSetterObject, "selectProfile", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(0)));
+}
+
+void HeatingCurrentView::setBusy(bool value)
+{
+    QMetaObject::invokeMethod(mSetterObject, "setBusy", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(value)));
+}
+
+void HeatingCurrentView::handleProfileSelection(int profileId)
+{
+    setBusy(true);
+    //retrieve profile data
+    qDebug() << "profile selected: "<< profileId;
+    mCurrentHeatingProfile = profileId;
+    setBusy(false);
 }
 
 //void HeatingCurrentView::setCurrentHeatingProfile(int id)
@@ -69,14 +106,41 @@ void HeatingCurrentView::resetAllForMultiUpdate()
 
 void HeatingCurrentView::saveCurrentSettings()
 {
-    qDebug() << "save current settings to the DB";
+    QtConcurrent::run([this]{
+        qDebug() << "save current settings to the DB";
+        HeatSettingsPayload payload;
+        payload.mMasterOn = mMasterOn;
 
+        for(auto& zone: mRoomSettings)
+        {
+            payload.mZoneSettings.push_back(zone->getZoneSetting());
+        }
+        payload.mProfiles.push_back(HeatProfile(mCurrentHeatingProfile+1, ""));
+        HeatSettingsMessage message(payload);
 
+        auto response = mComponents->getSender().sendReceive(mComponents->getMasterAddress(), SERVER_LISTEN_PORT, message);
+        Message msg(response);
+        auto header = msg.getHeader();
+        if(header.getType() == MessageType::REPLY)
+        {
+            auto& respMsg = static_cast<ReplyMessage&>(msg);
+            auto payload = respMsg.payload();
+            if(payload.mStatus == Status::OK)
+            {
+                qDebug() << "configuration applied successfully";
+            }
+            else
+            {
+                qDebug() << "configuration was not applied";
+            }
+        }
+      });
 }
 
 void HeatingCurrentView::resetCurrentSettings()
 {
     qDebug() << "Retrieve and Reload the settings from the DB";
+    setBusy(false);
 }
 
 void HeatingCurrentView::applyMultiSetter(int value)
@@ -100,27 +164,3 @@ RoomSetting *HeatingCurrentView::findRoomById(const QString &roomId)
     }
     return nullptr;
 }
-
-HeatingProfile::HeatingProfile(QObject *parent, QObject *rootObject)
-    :QObject(parent)
-{
-}
-
-//HeatingProfileType HeatingProfile::getCurrentProfile()
-//{
-//    return static_cast<HeatingProfileType>(profileObject->property("currentIndex").toUInt());
-//}
-
-//void HeatingProfile::setCurrentProfile(HeatingProfileType profile)
-//{
-
-//    qDebug() << "current prifile before: "<< static_cast<quint16>(getCurrentProfile());
-
-//    if(profileObject)
-//        profileObject->setProperty("currentIndex", static_cast<quint16>(profile));
-//    else
-//        qDebug() << "not found heating profile";
-
-
-//    qDebug() << "current prifile after: "<< static_cast<quint16>(getCurrentProfile());
-//}

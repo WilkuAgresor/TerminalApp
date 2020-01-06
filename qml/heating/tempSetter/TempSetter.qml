@@ -4,9 +4,22 @@ TempSetterForm {
     objectName: "ddd"
 
     signal valueChanged (int value)
+    signal switchedOnOff (bool value)
+
+    onOff.onCheckedChanged: {
+        if(!onOff.checked)
+        {
+            onOff.text = qsTr("OFF");
+        }
+        else
+        {
+            onOff.text = qsTr("ON");
+        }
+        switchedOnOff(onOff.checked)
+    }
 
     setter.onValueChanged: {
-         valueChanged(setter.value)
+        valueChanged(setter.value)
     }
 
     function setButtonText ( name )
@@ -26,6 +39,25 @@ TempSetterForm {
     {
         button.checked = false
     }
+
+    function setOn()
+    {
+        if(!onOff.checked)
+        {
+            onOff.toggle()
+            onOff.text = qsTr("ON");
+        }
+    }
+
+    function setOff()
+    {
+        if(onOff.checked)
+        {
+            onOff.text = qsTr("OFF");
+            onOff.toggle()
+        }
+    }
+
 
 //    function setCurTemp ( value )
 //    {

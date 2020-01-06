@@ -11,7 +11,7 @@ HeatingSetWidgetForm {
     signal unselectAll()
     signal selectedHeatingMode(int index)
 
-    function addZoneControlPanel( name, setterVal, curTemp )
+    function addZoneControlPanel( name, setterVal, isOn )
     {
         var component = Qt.createComponent("tempSetter/TempSetter.qml")
         var object = component.createObject(heatGrid)
@@ -21,6 +21,40 @@ HeatingSetWidgetForm {
      //   object.curTemp.append(curTemp)
 
         object.objectName = "heatZoneControlPanel_" + name
+
+        if(isOn)
+        {
+            object.setOn()
+        }
+        else
+        {
+            object.setOff()
+        }
+    }
+
+    function clearProfiles()
+    {
+        rightPanel.modeComboBox.editable = true
+        rightPanel.modeComboBox.profileList.clear()
+        rightPanel.modeComboBox.editable = false
+    }
+
+    function addProfile(name)
+    {
+        rightPanel.modeComboBox.editable = true
+        rightPanel.modeComboBox.profileList.append({text: name})
+        rightPanel.modeComboBox.editable = false
+    }
+
+    function selectProfile(id)
+    {
+        rightPanel.modeComboBox.currentIndex = id
+    }
+
+    function setBusy(value)
+    {
+        rightPanel.busyIndicator.visible = value
+        rightPanel.busyIndicator.running = value
     }
 
     rightPanel.heatMultiSetter.applyButton.onClicked :
@@ -37,11 +71,11 @@ HeatingSetWidgetForm {
     }
     rightPanel.saveButton.onClicked :
     {
-        heatingSetWidget.unselectAll()
+        heatingSetWidget.saveChanges()
     }
     rightPanel.resetButton.onClicked :
     {
-        heatingSetWidget.unselectAll()
+        heatingSetWidget.resetChanges()
     }
     rightPanel.modeComboBox.onActivated:
     {

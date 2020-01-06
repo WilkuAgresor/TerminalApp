@@ -1,27 +1,22 @@
 #include <heating/ZoneSetting.hpp>
 #include <QSpinBox>
 
-RoomSetting::RoomSetting(QObject *parent, QObject *rootObject, QString roomId)
-    :QObject(parent), mHeatingObject(rootObject), id(roomId)
+RoomSetting::RoomSetting(QObject *parent, QObject *rootObject, QString roomId, int setTemp, bool isOn)
+    :QObject(parent), mHeatingObject(rootObject), id(roomId), mSetTemperature(setTemp), mIsOn(isOn)
 {
     QMetaObject::invokeMethod(rootObject, "addZoneControlPanel", Qt::DirectConnection,
                               Q_ARG(QVariant, QVariant(id)),
-                              Q_ARG(QVariant, QVariant(2350)),
-                              Q_ARG(QVariant, QVariant(formatTemperature(23))));
+                              Q_ARG(QVariant, QVariant(mSetTemperature)),
+                              Q_ARG(QVariant, QVariant(mIsOn)));
 
     mFrontObject = mHeatingObject->findChild<QObject*>(HEATING_ZONE_ID_PREFIX + id, Qt::FindChildOption::FindChildrenRecursively);
 
-    if(mFrontObject)
-    {
-        qDebug() << "front object found";
-    }
-
     QObject::connect(mFrontObject, SIGNAL(valueChanged(int)), this, SLOT(handleSetValueChanged(int)));
+    QObject::connect(mFrontObject, SIGNAL(switchedOnOff(bool)), this, SLOT(handleSwitchedOnOff(bool)));
 
     auto buttonObject = mFrontObject->findChild<QObject*>(HEATING_ZONE_MULTI_SET_BUTTON_ID, Qt::FindChildOption::FindChildrenRecursively);
     if(buttonObject)
     {
-        qDebug() << "found button object";
         QObject::connect(buttonObject, SIGNAL(clicked()), this, SLOT(handleSelectedForMultiUpdate()));
     }
 }
@@ -70,6 +65,11 @@ bool RoomSetting::isSelectedForMultiUpdate()
     return mIsSelectedForMultiUpdate;
 }
 
+HeatZoneSetting RoomSetting::getZoneSetting()
+{
+    return HeatZoneSetting(mSetTemperature, mIsOn, id);
+}
+
 void RoomSetting::handleSelectedForMultiUpdate()
 {
     qDebug() << "Selected for multi update: "<<id;
@@ -79,5 +79,19 @@ void RoomSetting::handleSelectedForMultiUpdate()
 void RoomSetting::handleSetValueChanged(int newValue)
 {
     qDebug() << "set value changed to" << newValue;
+    mSetTemperature = newValue;
+}
+
+void RoomSetting::handleSwitchedOnOff(bool value)
+{
+    mIsOn = value;
+    if(value)
+    {
+        qDebug() << "zone " << id<<" switched on";
+    }
+    else
+    {
+        qDebug() << "zone " << id<<" switched off";
+    }
 }
 
