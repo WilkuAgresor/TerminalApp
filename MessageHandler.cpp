@@ -15,8 +15,9 @@ void MessageHandler::run()
 {
     Message msg(mDatagram.data());
     qDebug() << "parsed message: "<< msg.toString();
+    auto header = msg.getHeader();
 
-    auto messageType = msg.getHeader().getType();
+    auto messageType = header.getType();
 
     if(isHeatingMessage(messageType))
     {
@@ -27,13 +28,27 @@ void MessageHandler::run()
         {
             qDebug() << "replying to checkin request";
             TopologyCheckInMessage message;
-            mComponents.getSender().send(mDatagram.senderAddress(), SERVER_LISTEN_PORT, message.toData());
+
+            if(mDatagram.senderAddress() != mComponents.getMasterAddress())
+            {
+                qDebug() << "setting new master address: "<<mDatagram.senderAddress().toString();
+                mComponents.setMasterAddress(mDatagram.senderAddress());
+            }
+
+            if(header.mReplyPort != mComponents.getMasterPort())
+            {
+                qDebug() << "setting new master port: "<<header.mReplyPort;
+
+                mComponents.setMasterPort(header.mReplyPort);
+            }
+
+            mComponents.getSender().send(mComponents.getMasterAddress(), mComponents.getMasterPort(), message.toData());
         }
         if(mComponents.getDataInitPhase() == DataInitPhase::UNINITIALIZED)
         {
             qDebug() << "requesting data initiation from master node";
             TopologyRequestInitMessage initMessage;
-            mComponents.getSender().send(mDatagram.senderAddress(), SERVER_LISTEN_PORT, initMessage.toData());
+            mComponents.getSender().send(mComponents.getMasterAddress(), mComponents.getMasterPort(), initMessage.toData());
             mComponents.setDataInitPhase(DataInitPhase::READY);
         }
     }

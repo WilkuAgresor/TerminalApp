@@ -9,7 +9,7 @@
 #include <memory>
 
 #include <../common/subsystems/heating/HeatingDictionary.hpp>
-#include <heating/ZoneSetting.hpp>
+#include <heating/zoneSettings/ZoneControl.hpp>
 #include <../common/subsystems/heating/HeatingZoneSettings.hpp>
 
 class Components;
@@ -22,16 +22,14 @@ public:
     HeatingCurrentView(QObject *parent, QObject *rootView, Components* components);
     ~HeatingCurrentView() = default;
 
-    void setRoomCurTemp(const QString& roomId, double temperature);
-
-    void setRoomSetterTemperature(const QString& roomId, quint16 setting);
     void setCurrentHeatingProfile(int id);
 
-    void addZoneSettingObject(const HeatZoneSetting& setting);
     void setProfileList(const std::vector<HeatProfile>& profiles);
 
     void setBusy(bool value);
 
+    void setHeatZoneSettings(const std::vector<HeatZoneSetting> &settings);
+    int getCurrentProfileId();
 public slots:
     void multiSelectClicked(QString roomId);
     void applyMultiSetter(int value);
@@ -40,13 +38,15 @@ public slots:
     void saveCurrentSettings();
     void resetCurrentSettings();
     void handleProfileSelection(int profileId);
+    void handlePlaneChange(int selectedPlane);
 
 private:
-    RoomSetting *findRoomById(const QString& roomId);
+    ZoneControl* mZoneFrontControl;
+
     QObject* mSetterObject;
+    QObject* mCurrentObject;
     int mCurrentHeatingProfile = 0;
     bool mMasterOn = true;
     Components* mComponents;
 
-    std::vector<std::unique_ptr<RoomSetting>> mRoomSettings;
 };

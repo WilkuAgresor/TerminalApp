@@ -5,6 +5,7 @@ import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 
 import "qml/heating"
+import "qml/lights"
 
 ApplicationWindow {
     id: window
@@ -73,10 +74,35 @@ ApplicationWindow {
 
         }
 
-        LightsForm {
-            objectName: "lightsForm"
+//        LightsMainView
+//        {
+//            objectName: "lightsMainView"
+//        }
 
-        }
+            Page
+            {
+                StackLayout {
+
+                    Layout.alignment: Qt.AlignVCenter
+                    id: lightsLayous
+                    currentIndex: lightsTabBar.currentIndex
+
+                    LightsMainView
+                    {
+                        objectName: "lightsMainView"
+                    }
+                }
+                header: TabBar {
+                    id: lightsTabBar
+                    contentHeight: 80
+                    currentIndex: lightsLayous.currentIndex
+
+                    TabButton {
+                        text: qsTr("Oświetlenie")
+                    }
+                }
+            }
+
         Page
         {
 
@@ -88,7 +114,7 @@ ApplicationWindow {
 
             HeatingCurTemp
             {
-                objectName: "heatingView"
+                objectName: "heatingCurTemp"
             }
 
             HeatingSetWidget

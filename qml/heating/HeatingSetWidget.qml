@@ -17,8 +17,6 @@ HeatingSetWidgetForm {
         var object = component.createObject(heatGrid)
         object.button.text = name
         object.setter.value = setterVal
-     //   object.curTemp.clear()
-     //   object.curTemp.append(curTemp)
 
         object.objectName = "heatZoneControlPanel_" + name
 

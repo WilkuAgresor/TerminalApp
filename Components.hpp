@@ -46,11 +46,15 @@ struct Components
     {
         mMasterControllerPort = masterPort;
     }
+    int getMasterPort()
+    {
+        return mMasterControllerPort;
+    }
 
 private:
     DataInitPhase mDataInitPhase = DataInitPhase::UNINITIALIZED;
-    QHostAddress mMasterControllerAddress;
-    int mMasterControllerPort;
+    QHostAddress mMasterControllerAddress = QHostAddress(QHostAddress::SpecialAddress::Null);
+    int mMasterControllerPort = -1;
 
     QObject* mRootObject;
     Sender* mSender;

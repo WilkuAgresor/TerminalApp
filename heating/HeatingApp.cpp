@@ -28,11 +28,29 @@ void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromA
 void HeatingApp::handleReprovisionMessage(const HeatSettingsMessage &message, const QHostAddress& fromAddress, int fromPort)
 {
     auto payload = message.payload();
-    mComponents->setMasterAddress(fromAddress);
-    mComponents->setMasterPort(fromPort);
-    mCurrentView->setProfileList(payload.mProfiles);
-    for(auto& zoneSetting: payload.mZoneSettings)
-        mCurrentView->addZoneSettingObject(zoneSetting);
+    if(mComponents->getMasterAddress().isNull())
+        mComponents->setMasterAddress(fromAddress);
+    if(mComponents->getMasterPort() == 0)
+    {
+        auto header = message.getHeader();
+        if(header.mReplyPort != 0)
+            mComponents->setMasterPort(header.mReplyPort);
+    }
+
+    if(payload.mProfiles.size() > 1)
+        mCurrentView->setProfileList(payload.mProfiles);
+
+    //update dla konkretnego profilu
+    //procesować tylko jeżeli jest to aktualnie wyświetlany profil
+    if(payload.mProfiles.size() == 1)
+    {
+        if(payload.mProfiles.at(0).mId == mCurrentView->getCurrentProfileId()+1)
+            mCurrentView->setHeatZoneSettings(payload.mZoneSettings);
+    }
+    else if(!payload.mZoneSettings.empty())
+    {
+        mCurrentView->setHeatZoneSettings(payload.mZoneSettings);
+    }
     mCurrentView->setBusy(false);
 }
 

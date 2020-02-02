@@ -20,12 +20,10 @@ Page {
 
     Image {
         id: image
-        x: 148
-        y: 48
-        width: 305
-        height: 203
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        source: "dom1slajd1.jpg"
+        x: 59
+        y: 61
+        width: 800
+        source: "rzut.png"
+        fillMode: Image.PreserveAspectFit
     }
 }

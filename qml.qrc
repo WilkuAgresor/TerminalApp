@@ -28,5 +28,25 @@
         <file>qml/heating/HeatingSetWidgetForm.ui.qml</file>
         <file>qml/heating/HeatingCurTemp.qml</file>
         <file>qml/heating/HeatingCurTempForm.ui.qml</file>
+        <file>HouseOutlook.qml</file>
+        <file>HouseOutlookForm.ui.qml</file>
+        <file>resources/parter-rzut3.png</file>
+        <file>resources/pietro-rzut3.png</file>
+        <file>qml/heating/curTemp/HeatingCurTempWidget.qml</file>
+        <file>qml/heating/curTemp/HeatingCurTempWidgetForm.ui.qml</file>
+        <file>PixelTester.qml</file>
+        <file>PixelTesterForm.ui.qml</file>
+        <file>qml/lights/LightsMainView.qml</file>
+        <file>qml/lights/LightsMainViewForm.ui.qml</file>
+        <file>qml/lights/lightOn.png</file>
+        <file>qml/lights/lightOff.png</file>
+        <file>qml/lights/SimpleLightController.qml</file>
+        <file>qml/lights/SimpleLightControllerForm.ui.qml</file>
+        <file>qml/lights/dimmableLightOff.png</file>
+        <file>qml/lights/DimmableLightController.qml</file>
+        <file>qml/lights/DimmableLightControllerForm.ui.qml</file>
+        <file>qml/lights/dimmableLightOn.png</file>
+        <file>qml/lights/ColorLightController.qml</file>
+        <file>qml/lights/ColorLightControllerForm.ui.qml</file>
     </qresource>
 </RCC>

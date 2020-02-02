@@ -1,6 +1,7 @@
 #include <heating/HeatingCurrentView.hpp>
 
 #include <../common/subsystems/heating/HeatingDictionary.hpp>
+#include <../common/subsystems/heating/HeatingRetrieveMessage.hpp>
 #include <Components.hpp>
 #include <../common/messages/replyMessage.hpp>
 #include <QtConcurrent/QtConcurrent>
@@ -9,13 +10,18 @@ HeatingCurrentView::HeatingCurrentView(QObject* parent, QObject * rootView, Comp
     : QObject(parent), mComponents(components)
 {
     mSetterObject = rootView->findChild<QObject*>("heatingSetWidget", Qt::FindChildOption::FindChildrenRecursively);
+    mCurrentObject = rootView->findChild<QObject*>("heatingCurTemp", Qt::FindChildOption::FindChildrenRecursively);
 
     QObject::connect(mSetterObject, SIGNAL(applyMultiSetter(int)), this, SLOT(applyMultiSetter(int)), Qt::QueuedConnection);
     QObject::connect(mSetterObject, SIGNAL(selectAll()), this, SLOT(setAllForMultiUpdate()), Qt::QueuedConnection);
     QObject::connect(mSetterObject, SIGNAL(unselectAll()), this, SLOT(resetAllForMultiUpdate()), Qt::QueuedConnection);
     QObject::connect(mSetterObject, SIGNAL(saveChanges()), this, SLOT(saveCurrentSettings()), Qt::QueuedConnection);
     QObject::connect(mSetterObject, SIGNAL(resetChanges()), this, SLOT(resetCurrentSettings()), Qt::QueuedConnection);
-    QObject::connect(mSetterObject, SIGNAL(selectedHeatingMode(int)), this, SLOT(handleProfileSelection(int)), Qt::QueuedConnection);
+    QObject::connect(mSetterObject, SIGNAL(selectedHeatingMode(int)), this, SLOT(handleProfileSelection(int)), Qt::DirectConnection);
+    QObject::connect(mCurrentObject, SIGNAL(planeChanged(int)), this, SLOT(handlePlaneChange(int)), Qt::DirectConnection);
+
+
+    mZoneFrontControl = new ZoneControl(mSetterObject, mCurrentObject, this);
 
 //    for(auto& roomId: sHeatingIds)
 //    {
@@ -23,28 +29,6 @@ HeatingCurrentView::HeatingCurrentView(QObject* parent, QObject * rootView, Comp
 //        auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(parent, mSetterObject, roomId));
 //        mRoomSettings.emplace_back(std::move(roomSetting));
 //    }
-}
-
-void HeatingCurrentView::setRoomCurTemp(const QString &roomId, double temperature)
-{
-    auto room = findRoomById(roomId);
-
-    if(room)
-        room->setCurrentTemperature(temperature);
-}
-
-void HeatingCurrentView::setRoomSetterTemperature(const QString &roomId, quint16 setting)
-{
-    auto room = findRoomById(roomId);
-
-    if(room)
-        room->setSetterTemperature(setting);
-}
-
-void HeatingCurrentView::addZoneSettingObject(const HeatZoneSetting &setting)
-{     
-    auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(this, mSetterObject, setting.mZoneId, setting.mSetTemperature, setting.mIsOn));
-    mRoomSettings.emplace_back(std::move(roomSetting));
 }
 
 void HeatingCurrentView::setProfileList(const std::vector<HeatProfile> &profiles)
@@ -61,64 +45,70 @@ void HeatingCurrentView::setProfileList(const std::vector<HeatProfile> &profiles
 
 void HeatingCurrentView::setBusy(bool value)
 {
-    QMetaObject::invokeMethod(mSetterObject, "setBusy", Qt::DirectConnection,
+    QMetaObject::invokeMethod(mSetterObject, "setBusy", Qt::QueuedConnection,
                               Q_ARG(QVariant, QVariant(value)));
 }
 
 void HeatingCurrentView::handleProfileSelection(int profileId)
 {
     setBusy(true);
-    //retrieve profile data
+
     qDebug() << "profile selected: "<< profileId;
     mCurrentHeatingProfile = profileId;
+    HeatRetrievePayload payload(profileId+1);
+
+    qDebug () << "sending to: "<<mComponents->getMasterAddress().toString()<< ":"<<mComponents->getMasterPort();
+    HeatRetrieveMessage request(payload);
+
+    auto responseBytes = mComponents->getSender().sendReceive(mComponents->getMasterAddress(), mComponents->getMasterPort(), request);
+    Message msg(responseBytes);
+    auto header = msg.getHeader();
+
+    if(header.getType() == MessageType::HEAT_SETTINGS_UPDATE)
+    {
+        auto& message = static_cast<HeatSettingsMessage&>(msg);
+        auto payload = message.payload();
+        qDebug() <<"got reply: "<<message.toString();
+
+        mZoneFrontControl->addOrUpdateZoneSetting(payload.mZoneSettings);
+    }
     setBusy(false);
 }
 
-//void HeatingCurrentView::setCurrentHeatingProfile(int id)
-//{
-//    qDebug() << "Current heating profile changed to: "<<id;
-//    mCurrentHeatingProfile = id;
-//}
+void HeatingCurrentView::handlePlaneChange(int selectedPlane)
+{
+    qDebug() << "plane changed to: " << selectedPlane;
+    mZoneFrontControl->handlePlaneChange(selectedPlane);
+}
 
 void HeatingCurrentView::multiSelectClicked(QString roomId)
 {
-//    qDebug() << "multisetter clicked: " << roomId;
-//    auto room = findRoomById(roomId);
-//    if(room)
-//        room->checkForMultiSetter();
+    mZoneFrontControl->checkForMultiUpdate(roomId);
 }
 void HeatingCurrentView::setAllForMultiUpdate()
 {
-    qDebug() << "select all for multiupdate";
-    for(auto& zone: mRoomSettings)
-    {
-        zone->selectForMultiUpdate();
-    }
+    mZoneFrontControl->setAllForMultiUpdate();
 }
 
 void HeatingCurrentView::resetAllForMultiUpdate()
 {
-    for(auto& zone: mRoomSettings)
-    {
-        zone->unselectForMultiUpdate();
-    }
+    mZoneFrontControl->resetAllForMultiUpdate();
 }
 
 void HeatingCurrentView::saveCurrentSettings()
 {
+    setBusy(true);
     QtConcurrent::run([this]{
         qDebug() << "save current settings to the DB";
         HeatSettingsPayload payload;
         payload.mMasterOn = mMasterOn;
 
-        for(auto& zone: mRoomSettings)
-        {
-            payload.mZoneSettings.push_back(zone->getZoneSetting());
-        }
+        payload.mZoneSettings = mZoneFrontControl->getAllZoneSettings();
+
         payload.mProfiles.push_back(HeatProfile(mCurrentHeatingProfile+1, ""));
         HeatSettingsMessage message(payload);
 
-        auto response = mComponents->getSender().sendReceive(mComponents->getMasterAddress(), SERVER_LISTEN_PORT, message);
+        auto response = mComponents->getSender().sendReceive(mComponents->getMasterAddress(), mComponents->getMasterPort(), message);
         Message msg(response);
         auto header = msg.getHeader();
         if(header.getType() == MessageType::REPLY)
@@ -134,33 +124,29 @@ void HeatingCurrentView::saveCurrentSettings()
                 qDebug() << "configuration was not applied";
             }
         }
+        setBusy(false);
       });
 }
 
 void HeatingCurrentView::resetCurrentSettings()
 {
     qDebug() << "Retrieve and Reload the settings from the DB";
-    setBusy(false);
+    handleProfileSelection(mCurrentHeatingProfile);
 }
 
 void HeatingCurrentView::applyMultiSetter(int value)
 {
     qDebug() << "applyMultisetter with value :" <<value;
-    for(auto& zone: mRoomSettings)
-    {
-        if(zone->isSelectedForMultiUpdate())
-            zone->setSetterTemperature(value);
-    }
+    mZoneFrontControl->applyMultiSetter(value);
+
 }
 
-RoomSetting *HeatingCurrentView::findRoomById(const QString &roomId)
+void HeatingCurrentView::setHeatZoneSettings(const std::vector<HeatZoneSetting>& settings)
 {
-    for(auto& room: mRoomSettings)
-    {
-        if(room->id == roomId)
-        {
-            return room.get();
-        }
-    }
-    return nullptr;
+    mZoneFrontControl->addOrUpdateZoneSetting(settings);
+}
+
+int HeatingCurrentView::getCurrentProfileId()
+{
+    return mCurrentHeatingProfile;
 }

@@ -7,6 +7,8 @@ Page {
     id: page
     property alias heatGrid: heatGrid
     property alias rightPanel: rightPanel
+    width: 1280
+    height: 640
 
     //    header: Label {
     //        text: qsTr("Ogrzewanie - Ustawienia temperatury")
@@ -23,9 +25,11 @@ Page {
             id: heatGrid
             width: 0
             height: 0
+            rowSpacing: 10
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.leftMargin: 0
             Layout.rightMargin: 0
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             rows: 3
             columns: 4
 
@@ -37,7 +41,7 @@ Page {
             y: 0
 
             width: 220
-            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             Layout.rightMargin: 25
             Layout.topMargin: 0
             Layout.fillHeight: false
@@ -48,6 +52,6 @@ Page {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:1;anchors_height:0;anchors_width:0}
+    D{i:1;anchors_height:0;anchors_width:0}
 }
 ##^##*/

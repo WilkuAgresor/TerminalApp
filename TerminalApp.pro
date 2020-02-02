@@ -13,9 +13,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../common/ResponseReceiver.cpp \
+    ../common/subsystems/heating/HeatingRetrieveMessage.cpp \
     ../common/subsystems/topology/topologyMessages.cpp \
-    heating/ZoneSetting.cpp \
+    heating/zoneSettings/ZoneControl.cpp \
+    heating/zoneSettings/ZoneSetting.cpp \
         main.cpp \
     heating/HeatingCurrentView.cpp \
     heating/HeatingApp.cpp \
@@ -51,7 +52,7 @@ else: unix:!android: target.path = /home/pi/
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    ../common/ResponseReceiver.hpp \
+    ../common/subsystems/heating/HeatingRetrieveMessage.hpp \
     ../common/subsystems/topology/topologyMessages.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
@@ -76,7 +77,8 @@ HEADERS += \
     MessageHandler.hpp \
     ../common/subsystems/heating/HeatingDictionary.hpp \
     ../common/subsystems/heating/HeatingZoneSettings.hpp \
-    heating/ZoneSetting.hpp
+    heating/zoneSettings/ZoneControl.hpp \
+    heating/zoneSettings/ZoneSetting.hpp
 
 DISTFILES += \
     parter.png \
