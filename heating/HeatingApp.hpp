@@ -15,7 +15,7 @@ public:
 
     void handleMessage(const Message& message, const QHostAddress &fromAddress, int fromPort);
 private:
-    void handleReprovisionMessage(const HeatSettingsMessage& message, const QHostAddress &fromAddress, int fromPort);
+    void handleReprovisionMessage(const HeatSettingsMessage& message, const QHostAddress &fromAddress);
  //   void handleStatusUpdateMessage(const HeatStatusMessage& message);
 
     Components* mComponents;

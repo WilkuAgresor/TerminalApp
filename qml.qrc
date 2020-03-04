@@ -48,5 +48,9 @@
         <file>qml/lights/dimmableLightOn.png</file>
         <file>qml/lights/ColorLightController.qml</file>
         <file>qml/lights/ColorLightControllerForm.ui.qml</file>
+        <file>qml/lights/colorLightOff.png</file>
+        <file>qml/lights/colorLightOn.png</file>
+        <file>qml/lights/ColorPicker.qml</file>
+        <file>qml/lights/ColorPickerForm.ui.qml</file>
     </qresource>
 </RCC>

@@ -23,6 +23,10 @@ void MessageHandler::run()
     {
         mComponents.getHeatingApp().handleMessage(msg, mDatagram.senderAddress(), mDatagram.senderPort());
     }
+    else if(isLightsMessage(messageType))
+    {
+        mComponents.getLightsApp().handleMessage(msg, mDatagram.senderAddress(), mDatagram.senderPort());
+    }
     else if(messageType == MessageType::TOPOLOGY_REQUEST_CHECKIN)
     {
         {

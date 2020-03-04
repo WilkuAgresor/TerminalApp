@@ -15,8 +15,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     ../common/subsystems/heating/HeatingRetrieveMessage.cpp \
     ../common/subsystems/topology/topologyMessages.cpp \
+    ../common/subsystems/lights/LightControllerSettings.cpp \
+    ../common/subsystems/lights/LightsRetrieveMessage.cpp \
     heating/zoneSettings/ZoneControl.cpp \
     heating/zoneSettings/ZoneSetting.cpp \
+    lights/LightsApp.cpp \
+    lights/LightsView.cpp \
+    lights/lightControllers/ColorLightController.cpp \
+    lights/lightControllers/DimmableLightController.cpp \
+    lights/lightControllers/ILightController.cpp \
+    lights/lightControllers/SimpleLightController.cpp \
         main.cpp \
     heating/HeatingCurrentView.cpp \
     heating/HeatingApp.cpp \
@@ -41,7 +49,7 @@ SOURCES += \
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = qml/heating
+QML_IMPORT_PATH = qml/lights
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
@@ -54,6 +62,9 @@ else: unix:!android: target.path = /home/pi/
 HEADERS += \
     ../common/subsystems/heating/HeatingRetrieveMessage.hpp \
     ../common/subsystems/topology/topologyMessages.hpp \
+    ../common/subsystems/lights/LightControllerSettings.hpp \
+    ../common/subsystems/lights/LightsRetrieveMessage.hpp \
+    ../common/subsystems/lights/LightsDictionary.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
     MainApp.hpp \
@@ -78,7 +89,13 @@ HEADERS += \
     ../common/subsystems/heating/HeatingDictionary.hpp \
     ../common/subsystems/heating/HeatingZoneSettings.hpp \
     heating/zoneSettings/ZoneControl.hpp \
-    heating/zoneSettings/ZoneSetting.hpp
+    heating/zoneSettings/ZoneSetting.hpp \
+    lights/LightsApp.hpp \
+    lights/LightsView.hpp \
+    lights/lightControllers/ColorLightController.hpp \
+    lights/lightControllers/DimmableLightController.hpp \
+    lights/lightControllers/ILightController.hpp \
+    lights/lightControllers/SimpleLightController.hpp
 
 DISTFILES += \
     parter.png \

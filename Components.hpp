@@ -4,13 +4,15 @@
 #include "../common/sender.hpp"
 
 #include <heating/HeatingApp.hpp>
+#include <lights/LightsApp.hpp>
 
 struct Components
 {
     Components(QObject* parent, QObject* rootObject):
         mRootObject(rootObject),
         mSender(new Sender(9999, parent)),
-        mHeatingApp(new HeatingApp(mRootObject, parent, this))
+        mHeatingApp(new HeatingApp(mRootObject, parent, this)),
+        mLightsApp(new LightsApp(mRootObject, parent, this))
     {
     }
 
@@ -22,6 +24,11 @@ struct Components
     HeatingApp& getHeatingApp()
     {
         return *mHeatingApp;
+    }
+
+    LightsApp& getLightsApp()
+    {
+        return *mLightsApp;
     }
 
     DataInitPhase getDataInitPhase() const
@@ -59,4 +66,5 @@ private:
     QObject* mRootObject;
     Sender* mSender;
     HeatingApp* mHeatingApp;
+    LightsApp* mLightsApp;
 };

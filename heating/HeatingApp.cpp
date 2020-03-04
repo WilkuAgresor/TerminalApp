@@ -12,12 +12,12 @@ HeatingApp::HeatingApp(QObject* rootObject, QObject *parent, Components *compone
 {
 }
 
-void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromAddress, int fromPort)
+void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromAddress, int /*fromPort*/)
 {
     switch(message.getHeader().getType())
     {
     case MessageType::HEAT_SETTINGS_UPDATE:
-        handleReprovisionMessage(static_cast<const HeatSettingsMessage&>(message), fromAddress, fromPort);
+        handleReprovisionMessage(static_cast<const HeatSettingsMessage&>(message), fromAddress);
         // handleStatusUpdateMessage(static_cast<const HeatStatusMessage&>(message));
         break;
     default:
@@ -25,7 +25,7 @@ void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromA
     }
 }
 
-void HeatingApp::handleReprovisionMessage(const HeatSettingsMessage &message, const QHostAddress& fromAddress, int fromPort)
+void HeatingApp::handleReprovisionMessage(const HeatSettingsMessage &message, const QHostAddress& fromAddress)
 {
     auto payload = message.payload();
     if(mComponents->getMasterAddress().isNull())
