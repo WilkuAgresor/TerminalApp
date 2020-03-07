@@ -42,6 +42,11 @@ int ILightController::getDimm()
     return mControllerSettings.mDimm;
 }
 
+QString ILightController::getColor()
+{
+    return mControllerSettings.mColor;
+}
+
 LightControllerGuiSettings ILightController::getGuiSettings()
 {
     return mControllerSettings.mGuiSettings;
@@ -57,20 +62,10 @@ void ILightController::handlePlaneChange(int selectedPlane)
     }
 }
 
-void ILightController::handleSettingsChange(const LightControllerSettings &settings)
+void ILightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
     mControllerSettings = settings;
     //update gui settings
-}
-
-void ILightController::setIsOn(bool isOn)
-{
-    QtConcurrent::run([this, isOn]{
-        mControllerSettings.mIsOn = isOn;
-        QMetaObject::invokeMethod(mControllerObject, "setState", Qt::DirectConnection,
-                                  Q_ARG(QVariant, QVariant(isOn)));
-    });
-
 }
 
 void ILightController::commitChangedSettings(const LightControllerSettings& settings)

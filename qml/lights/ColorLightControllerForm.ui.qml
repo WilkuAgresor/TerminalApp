@@ -16,6 +16,7 @@ Item {
     property alias popup: popup
     property alias slider: slider
     property alias image: image
+    property alias colorPicker: colorPicker
 
     Image {
         width: 45
@@ -66,6 +67,7 @@ Item {
 
                 ColorPicker
                 {
+                    id: colorPicker
                     width: 300
                 }
 

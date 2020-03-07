@@ -20,7 +20,7 @@ LightsMainViewForm {
         object.objectName = "lightsSimpleControl_" + name
         object.simpleLightControllerX = x
         object.simpleLightControllerY = y
-        object.setState(isOn)
+        object.setStateInternal(isOn)
     }
 
     function addDimmableLightController(name, isOn, x, y, dimm)
@@ -31,7 +31,7 @@ LightsMainViewForm {
         object.objectName = "lightsDimmableControl_" + name
         object.dimmableLightControllerX = x
         object.dimmableLightControllerY = y
-        object.setState(isOn)
+        object.setStateInternal(isOn)
         object.setDimm(dimm)
     }
 
@@ -43,7 +43,7 @@ LightsMainViewForm {
         object.objectName = "lightsColorControl_" + name
         object.x = x
         object.y = y
-        object.setState(isOn)
+        object.setStateInternal(isOn)
         object.setDimm(dimm)
 //        object.setColor(color)
     }

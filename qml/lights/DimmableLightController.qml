@@ -6,9 +6,10 @@ DimmableLightControllerForm {
     id: dimmableLightForm
     property var isOn: false
 
+    signal lightOnChanged(bool isOn)
     signal lightDimmChanged(int dimm)
 
-    function setState( state )
+    function setStateInternal( state )
     {
         if(isOn !== state )
         {
@@ -22,6 +23,15 @@ DimmableLightControllerForm {
                image.source = "dimmableLightOn.png"
                isOn = true
            }
+        }
+    }
+
+    function setState( state )
+    {
+        if(isOn !== state)
+        {
+            lightOnChanged( state )
+            setStateInternal( state )
         }
     }
 

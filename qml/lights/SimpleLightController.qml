@@ -7,7 +7,9 @@ SimpleLightControllerForm {
     id: simpleLightForm
     property var isOn: false
 
-    function setState( state )
+    signal lightOnChanged(bool isOn)
+
+    function setStateInternal( state )
     {
         if(isOn !== state )
         {
@@ -21,6 +23,15 @@ SimpleLightControllerForm {
                image.source = "lightOn.png"
                isOn = true
            }
+        }
+    }
+
+    function setState( state )
+    {
+        if(isOn !== state)
+        {
+            lightOnChanged( state )
+            setStateInternal( state )
         }
     }
 

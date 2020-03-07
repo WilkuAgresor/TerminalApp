@@ -6,9 +6,11 @@ ColorLightControllerForm {
     id: dimmableLightForm
     property var isOn: false
 
+    signal lightOnChanged(bool isOn)
     signal lightDimmChanged(int dimm)
+    signal lightColorChanged(string color)
 
-    function setState( state )
+    function setStateInternal( state )
     {
         if(isOn !== state )
         {
@@ -22,6 +24,15 @@ ColorLightControllerForm {
                image.source = "colorLightOn.png"
                isOn = true
            }
+        }
+    }
+
+    function setState( state )
+    {
+        if(isOn !== state)
+        {
+            lightOnChanged( state )
+            setStateInternal( state )
         }
     }
 
@@ -52,5 +63,8 @@ ColorLightControllerForm {
 
     slider.onMoved: {
         lightDimmChanged(slider.value)
+    }
+    colorPicker.onLightColorChanged: {
+        lightColorChanged(color)
     }
 }

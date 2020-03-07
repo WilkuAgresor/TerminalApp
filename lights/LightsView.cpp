@@ -29,7 +29,7 @@ void LightsView::handleSettingsChange(const std::vector<LightControllerSettings>
                 [&setting](const std::unique_ptr<ILightController>& x) { return x->getId() == setting.mId;});
         if(it != mLightControllers.end())
         {
-            (*it)->handleSettingsChange(setting);
+            (*it)->handleSettingsChangeFromController(setting);
         }
         else
         {

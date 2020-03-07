@@ -10,12 +10,33 @@ ColorLightController::~ColorLightController()
 {
 }
 
-void ColorLightController::handleSettingsChange(const LightControllerSettings &settings)
+void ColorLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    //set color to gui
-
-    DimmableLightController::handleSettingsChange(settings);
+    if(settings.mColor != getColor())
+    {
+        setColorToGui(settings.mColor);
+    }
+    DimmableLightController::handleSettingsChangeFromController(settings);
 }
+
+void ColorLightController::setColorToGui(const QString& color)
+{
+    QtConcurrent::run([&]{
+        QMetaObject::invokeMethod(mControllerObject, "setColor", Qt::DirectConnection,
+                                  Q_ARG(QVariant, QVariant(color)));
+    });
+}
+
+void ColorLightController::handleColorChangeFromGui(QString color)
+{
+    if(color != mControllerSettings.mColor)
+    {
+        mControllerSettings.mColor = color;
+        commitChangedSettings(mControllerSettings);
+    }
+}
+
+
 
 void ColorLightController::init()
 {
@@ -32,6 +53,8 @@ void ColorLightController::init()
     }
     else
     {
-        QObject::connect(mControllerObject, SIGNAL(lightDimmChanged(int)), this, SLOT(handleDimmChange(int)));
+        QObject::connect(mControllerObject, SIGNAL(lightColorChanged(QString)), this, SLOT(handleColorChangeFromGui(QString)));
+        QObject::connect(mControllerObject, SIGNAL(lightDimmChanged(int)), this, SLOT(handleDimmChangeFromGui(int)));
+        QObject::connect(mControllerObject, SIGNAL(lightOnChanged(bool)), this, SLOT(handleOnChangeFromGui(bool)));
     }
 }

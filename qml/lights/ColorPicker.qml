@@ -6,9 +6,13 @@ import QtQuick.Controls.Styles 1.4
 
 ColorPickerForm {
 
+    signal lightColorChanged(string color)
+
     function updateSelectedColor()
     {
-        selectedColorBox.color = Qt.rgba(sliderR.value/255., sliderG.value/225., sliderB.value/255., 1);
+        var color = Qt.rgba(sliderR.value/255., sliderG.value/225., sliderB.value/255., 1)
+        selectedColorBox.color = color;
+        lightColorChanged(color)
     }
 
     sliderR.onValueChanged:

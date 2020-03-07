@@ -8,9 +8,14 @@ class SimpleLightController : public ILightController
 public:
     SimpleLightController(QObject* parent, QObject* lightsViewObject, Components* components, const LightControllerSettings& settings);
     virtual void init() override;
-
-    virtual void handleSettingsChange(const LightControllerSettings& settings) override;
-
     ~SimpleLightController();
+
+    virtual void handleSettingsChangeFromController(const LightControllerSettings& settings) override;
+
+    void setIsOnToGui(bool isOn);
+
+public slots:
+    void handleOnChangeFromGui(bool isOn);
+
 };
 

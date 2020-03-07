@@ -11,13 +11,13 @@ public:
 
     ~DimmableLightController();
 
-    void setDimm(int dimm);
+    void setDimmToGui(int dimm);
 
-    virtual void handleSettingsChange(const LightControllerSettings &settings) override;
+    virtual void handleSettingsChangeFromController(const LightControllerSettings &settings) override;
 
 
 public slots:
-    void handleDimmChange(int dimm);
+    void handleDimmChangeFromGui(int dimm);
 
 private:
     int mDimm;

@@ -26,7 +26,8 @@ void DimmableLightController::init()
         }
         else
         {
-            QObject::connect(mControllerObject, SIGNAL(lightDimmChanged(int)), this, SLOT(handleDimmChange(int)));
+            QObject::connect(mControllerObject, SIGNAL(lightDimmChanged(int)), this, SLOT(handleDimmChangeFromGui(int)));
+            QObject::connect(mControllerObject, SIGNAL(lightOnChanged(bool)), this, SLOT(handleOnChangeFromGui(bool)));
         }
     }
 }
@@ -36,7 +37,7 @@ DimmableLightController::~DimmableLightController()
 }
 
 //to gui
-void DimmableLightController::setDimm(int dimm)
+void DimmableLightController::setDimmToGui(int dimm)
 {
     QtConcurrent::run([&]{
         QMetaObject::invokeMethod(mControllerObject, "setDimm", Qt::DirectConnection,
@@ -45,17 +46,17 @@ void DimmableLightController::setDimm(int dimm)
 }
 
 //from controller
-void DimmableLightController::handleSettingsChange(const LightControllerSettings &settings)
+void DimmableLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
     if(settings.mDimm != mControllerSettings.mDimm)
     {
-        setDimm(settings.mDimm);
+        setDimmToGui(settings.mDimm);
     }
-    SimpleLightController::handleSettingsChange(settings);
+    SimpleLightController::handleSettingsChangeFromController(settings);
 }
 
 //from gui
-void DimmableLightController::handleDimmChange(int dimm)
+void DimmableLightController::handleDimmChangeFromGui(int dimm)
 {
     qDebug() << "change: "<<dimm;
 

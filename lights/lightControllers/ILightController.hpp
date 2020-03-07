@@ -18,12 +18,12 @@ public:
     QString getName();
     bool getIsOn();
     int getDimm();
+    QString getColor();
 
     LightControllerGuiSettings getGuiSettings();
-    void setIsOn(bool isOn);
 
     void handlePlaneChange(int selectedPlane);
-    virtual void handleSettingsChange(const LightControllerSettings& settings);
+    virtual void handleSettingsChangeFromController(const LightControllerSettings& settings);
 
     void commitChangedSettings(const LightControllerSettings &settings);
 protected:

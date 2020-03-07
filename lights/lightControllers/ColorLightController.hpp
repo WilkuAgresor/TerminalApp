@@ -10,8 +10,11 @@ public:
     virtual void init() override;
     ~ColorLightController();
 
-    virtual void handleSettingsChange(const LightControllerSettings &settings) override;
+    virtual void handleSettingsChangeFromController(const LightControllerSettings &settings) override;
 
+    void setColorToGui(const QString &color);
+public slots:
+    void handleColorChangeFromGui(QString color);
 private:
 };
 
