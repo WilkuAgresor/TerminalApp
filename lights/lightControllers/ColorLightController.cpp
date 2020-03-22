@@ -12,8 +12,11 @@ ColorLightController::~ColorLightController()
 
 void ColorLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    if(settings.mColor != getColor())
+    qDebug() << "settings 3";
+
+    if(settings.mColorChanged && (settings.mColor != getColor()))
     {
+        mControllerSettings.mColor = settings.mColor;
         setColorToGui(settings.mColor);
     }
     DimmableLightController::handleSettingsChangeFromController(settings);
@@ -21,10 +24,8 @@ void ColorLightController::handleSettingsChangeFromController(const LightControl
 
 void ColorLightController::setColorToGui(const QString& color)
 {
-    QtConcurrent::run([&]{
-        QMetaObject::invokeMethod(mControllerObject, "setColor", Qt::DirectConnection,
-                                  Q_ARG(QVariant, QVariant(color)));
-    });
+    QMetaObject::invokeMethod(mControllerObject, "setColor", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(color)));
 }
 
 void ColorLightController::handleColorChangeFromGui(QString color)
@@ -32,11 +33,13 @@ void ColorLightController::handleColorChangeFromGui(QString color)
     if(color != mControllerSettings.mColor)
     {
         mControllerSettings.mColor = color;
-        commitChangedSettings(mControllerSettings);
+
+        auto settings = mControllerSettings.constructEmptySettingsWithId();
+        settings.setColor(color);
+
+        commitChangedSettings(settings);
     }
 }
-
-
 
 void ColorLightController::init()
 {

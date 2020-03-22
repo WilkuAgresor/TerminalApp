@@ -31,20 +31,23 @@ void SimpleLightController::init()
 
 void SimpleLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    if(settings.mIsOn != getIsOn())
+    qDebug() << "settings 1";
+
+    if(settings.mIsOnChanged && (settings.mIsOn != getIsOn()))
     {
+        qDebug() << "onChanged";
+
+        mControllerSettings.mIsOn = settings.mIsOn;
         setIsOnToGui(settings.mIsOn);
-        ILightController::handleSettingsChangeFromController(settings);
     }
+    ILightController::handleSettingsChangeFromController(settings);
 }
 
 void SimpleLightController::setIsOnToGui(bool isOn)
 {
     qDebug() << "set state to gui: "<<isOn;
-    QtConcurrent::run([&]{
-        QMetaObject::invokeMethod(mControllerObject, "setStateInternal", Qt::DirectConnection,
-                                  Q_ARG(QVariant, QVariant(isOn)));
-    });
+    QMetaObject::invokeMethod(mControllerObject, "setStateInternal", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(isOn)));
 }
 
 void SimpleLightController::handleOnChangeFromGui(bool isOn)
@@ -54,7 +57,10 @@ void SimpleLightController::handleOnChangeFromGui(bool isOn)
     if(isOn != getIsOn())
     {
         mControllerSettings.mIsOn = isOn;
-        commitChangedSettings(mControllerSettings);
+
+        auto settings = mControllerSettings.constructEmptySettingsWithId();
+        settings.setIsOn(isOn);
+        commitChangedSettings(settings);
     }
 }
 

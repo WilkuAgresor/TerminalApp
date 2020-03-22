@@ -62,9 +62,11 @@ void ILightController::handlePlaneChange(int selectedPlane)
     }
 }
 
-void ILightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
+void ILightController::handleSettingsChangeFromController(const LightControllerSettings &/*settings*/)
 {
-    mControllerSettings = settings;
+    qDebug() << "settings 0";
+
+//    mControllerSettings = settings;
     //update gui settings
 }
 

@@ -39,17 +39,18 @@ DimmableLightController::~DimmableLightController()
 //to gui
 void DimmableLightController::setDimmToGui(int dimm)
 {
-    QtConcurrent::run([&]{
-        QMetaObject::invokeMethod(mControllerObject, "setDimm", Qt::DirectConnection,
-                                  Q_ARG(QVariant, QVariant(dimm)));
-    });
+    QMetaObject::invokeMethod(mControllerObject, "setDimm", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(dimm)));
 }
 
 //from controller
 void DimmableLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    if(settings.mDimm != mControllerSettings.mDimm)
+    qDebug() << "settings 2";
+
+    if(settings.mDimmChanged && (settings.mDimm != mControllerSettings.mDimm))
     {
+        mControllerSettings.mDimm = settings.mDimm;
         setDimmToGui(settings.mDimm);
     }
     SimpleLightController::handleSettingsChangeFromController(settings);
@@ -63,6 +64,9 @@ void DimmableLightController::handleDimmChangeFromGui(int dimm)
     if(dimm != mControllerSettings.mDimm)
     {
         mControllerSettings.mDimm = dimm;
-        commitChangedSettings(mControllerSettings);
+
+        auto settings = mControllerSettings.constructEmptySettingsWithId();
+        settings.setDimm(dimm);
+        commitChangedSettings(settings);
     }
 }
