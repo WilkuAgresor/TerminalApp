@@ -14,7 +14,7 @@ MessageHandler::MessageHandler(QNetworkDatagram datagram, Components& components
 void MessageHandler::run()
 {
     Message msg(mDatagram.data());
-    qDebug() << "parsed message: "<< msg.toString();
+//    qDebug() << "parsed message: "<< msg.toString();
     auto header = msg.getHeader();
 
     auto messageType = header.getType();
@@ -30,19 +30,15 @@ void MessageHandler::run()
     else if(messageType == MessageType::TOPOLOGY_REQUEST_CHECKIN)
     {
         {
-            qDebug() << "replying to checkin request";
             TopologyCheckInMessage message;
 
             if(mDatagram.senderAddress() != mComponents.getMasterAddress())
             {
-                qDebug() << "setting new master address: "<<mDatagram.senderAddress().toString();
                 mComponents.setMasterAddress(mDatagram.senderAddress());
             }
 
             if(header.mReplyPort != mComponents.getMasterPort())
             {
-                qDebug() << "setting new master port: "<<header.mReplyPort;
-
                 mComponents.setMasterPort(header.mReplyPort);
             }
 
@@ -50,7 +46,6 @@ void MessageHandler::run()
         }
         if(mComponents.getDataInitPhase() == DataInitPhase::UNINITIALIZED)
         {
-            qDebug() << "requesting data initiation from master node";
             TopologyRequestInitMessage initMessage;
             mComponents.getSender().send(mComponents.getMasterAddress(), mComponents.getMasterPort(), initMessage.toData());
             mComponents.setDataInitPhase(DataInitPhase::READY);

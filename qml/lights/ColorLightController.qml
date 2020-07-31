@@ -29,11 +29,7 @@ ColorLightControllerForm {
 
     function setState( state )
     {
-        if(isOn !== state)
-        {
-            lightOnChanged( state )
-            setStateInternal( state )
-        }
+        setStateInternal( state )
     }
 
     function setVisible( isVisible )
@@ -47,14 +43,7 @@ ColorLightControllerForm {
     }
 
     mouseArea.onClicked: {
-        if(isOn == true)
-        {
-            setState(false)
-        }
-        else
-        {
-            setState(true)
-        }
+        lightOnChanged( isOn )
     }
 
     mouseArea.onPressAndHold: {

@@ -10,7 +10,6 @@ TerminalReceiver::TerminalReceiver(QObject *parent, Components& components)
 
 void TerminalReceiver::handleMessage(QNetworkDatagram msg)
 {
-    qDebug() << "Handling incoming message";
     try
     {
         auto messageHandler = new MessageHandler(msg, mComponents);

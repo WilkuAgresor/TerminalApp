@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.12
 
 import "qml/heating"
 import "qml/lights"
+import "qml/alarm"
 
 ApplicationWindow {
     id: window
@@ -69,39 +70,53 @@ ApplicationWindow {
             objectName: "shortcutsForm"
         }
 
-        AlarmForm {
-            objectName: "alarmForm"
+        Page
+        {
+            StackLayout {
 
-        }
+                Layout.alignment: Qt.AlignVCenter
+                id: alarmLayout
+                currentIndex: alarmTabBar.currentIndex
 
-//        LightsMainView
-//        {
-//            objectName: "lightsMainView"
-//        }
-
-            Page
-            {
-                StackLayout {
-
-                    Layout.alignment: Qt.AlignVCenter
-                    id: lightsLayous
-                    currentIndex: lightsTabBar.currentIndex
-
-                    LightsMainView
-                    {
-                        objectName: "lightsMainView"
-                    }
-                }
-                header: TabBar {
-                    id: lightsTabBar
-                    contentHeight: 80
-                    currentIndex: lightsLayous.currentIndex
-
-                    TabButton {
-                        text: qsTr("Oświetlenie")
-                    }
+                AlarmMainView
+                {
+                    objectName: "alarmMainView"
                 }
             }
+            header: TabBar {
+                id: alarmTabBar
+                contentHeight: 80
+                currentIndex: alarmLayout.currentIndex
+
+                TabButton {
+                    text: qsTr("Alarm")
+                }
+            }
+        }
+
+        Page
+        {
+            StackLayout {
+
+                Layout.alignment: Qt.AlignVCenter
+                id: lightsLayous
+                currentIndex: lightsTabBar.currentIndex
+
+                LightsMainView
+                {
+                    objectName: "lightsMainView"
+                }
+            }
+            header: TabBar {
+                id: lightsTabBar
+                contentHeight: 80
+                currentIndex: lightsLayous.currentIndex
+
+                TabButton {
+                    text: qsTr("Oświetlenie")
+                }
+            }
+        }
 
         Page
         {
@@ -125,6 +140,10 @@ ApplicationWindow {
             HeatingModesForm {
                 objectName: "heatingModesForm"
             }
+
+            HeatingStatistics {
+                objectName: "heatingStatistics"
+            }
         }
         header: TabBar {
             id: heatTabBar
@@ -139,6 +158,9 @@ ApplicationWindow {
             }
             TabButton {
                 text: qsTr("Ustawienia trybów pracy")
+            }
+            TabButton {
+                text: qsTr("Statystyka")
             }
         }
 

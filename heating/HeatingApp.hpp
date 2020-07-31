@@ -3,6 +3,8 @@
 #include <QObject>
 #include <../common/subsystems/heating/HeatingZoneSettings.hpp>
 #include <heating/HeatingCurrentView.hpp>
+#include <heating/HeatingStatistics.hpp>
+
 #include <QNetworkDatagram>
 
 class Components;
@@ -21,4 +23,5 @@ private:
     Components* mComponents;
     QObject* mRootObject;
     HeatingCurrentView* mCurrentView;
+    HeatingStatistics* mStatistics;
 };

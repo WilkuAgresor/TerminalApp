@@ -52,5 +52,10 @@
         <file>qml/lights/colorLightOn.png</file>
         <file>qml/lights/ColorPicker.qml</file>
         <file>qml/lights/ColorPickerForm.ui.qml</file>
+        <file>qml/alarm/AlarmMainView.qml</file>
+        <file>qml/alarm/AlarmMainViewForm.ui.qml</file>
+        <file>qml/heating/HeatingStatistics.qml</file>
+        <file>qml/heating/HeatingStatisticsForm.ui.qml</file>
+        <file>qml/heating/statistics/ZoneListView.qml</file>
     </qresource>
 </RCC>

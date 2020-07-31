@@ -30,7 +30,7 @@ public:
     void checkForMultiUpdate(QString roomId);
     void handlePlaneChange(int selectedPlane);
 private:
-    RoomSetting *findRoomById(const QString& roomId);
+    RoomSetting *findZoneByName(const QString& zoneName);
     void addZoneSettingObject(const HeatZoneSetting& setting);
 //    void setRoomCurTemp(const QString &roomId, double temperature);
 //    void setRoomSetterTemperature(const QString &roomId, quint16 setting);

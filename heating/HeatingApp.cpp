@@ -8,7 +8,8 @@ HeatingApp::HeatingApp(QObject* rootObject, QObject *parent, Components *compone
       QObject(parent),
       mComponents(components),
       mRootObject(rootObject),
-      mCurrentView(new HeatingCurrentView(parent, rootObject, mComponents))
+      mCurrentView(new HeatingCurrentView(parent, rootObject, mComponents)),
+      mStatistics(new HeatingStatistics(parent, rootObject, mComponents))
 {
 }
 
@@ -30,11 +31,18 @@ void HeatingApp::handleReprovisionMessage(const HeatSettingsMessage &message, co
     auto payload = message.payload();
     if(mComponents->getMasterAddress().isNull())
         mComponents->setMasterAddress(fromAddress);
-    if(mComponents->getMasterPort() == 0)
-    {
+    if(mComponents->getMasterPort() == -1)
+    {        
+        mStatistics->clear();
+
         auto header = message.getHeader();
         if(header.mReplyPort != 0)
             mComponents->setMasterPort(header.mReplyPort);
+    }
+
+    for(auto& zone: payload.mZoneSettings)
+    {
+        mStatistics->addZone(zone.mZoneName);
     }
 
     if(payload.mProfiles.size() > 1)
@@ -51,6 +59,7 @@ void HeatingApp::handleReprovisionMessage(const HeatSettingsMessage &message, co
     {
         mCurrentView->setHeatZoneSettings(payload.mZoneSettings);
     }
+
     mCurrentView->setBusy(false);
 }
 

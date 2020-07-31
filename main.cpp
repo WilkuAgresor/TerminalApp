@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QCursor>
@@ -30,10 +30,10 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     qInstallMessageHandler(myMessageOutput);
 
-    QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     QScopedPointer<MainApplication> mainApp(new MainApplication(&app));

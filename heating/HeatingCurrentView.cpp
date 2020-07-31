@@ -53,11 +53,9 @@ void HeatingCurrentView::handleProfileSelection(int profileId)
 {
     setBusy(true);
 
-    qDebug() << "profile selected: "<< profileId;
     mCurrentHeatingProfile = profileId;
     HeatRetrievePayload payload(profileId+1);
 
-    qDebug () << "sending to: "<<mComponents->getMasterAddress().toString()<< ":"<<mComponents->getMasterPort();
     HeatRetrieveMessage request(payload);
 
     auto responseBytes = mComponents->getSender().sendReceive(mComponents->getMasterAddress(), mComponents->getMasterPort(), request);
@@ -68,8 +66,6 @@ void HeatingCurrentView::handleProfileSelection(int profileId)
     {
         auto& message = static_cast<HeatSettingsMessage&>(msg);
         auto payload = message.payload();
-        qDebug() <<"got reply: "<<message.toString();
-
         mZoneFrontControl->addOrUpdateZoneSetting(payload.mZoneSettings);
     }
     setBusy(false);
@@ -77,7 +73,6 @@ void HeatingCurrentView::handleProfileSelection(int profileId)
 
 void HeatingCurrentView::handlePlaneChange(int selectedPlane)
 {
-    qDebug() << "plane changed to: " << selectedPlane;
     mZoneFrontControl->handlePlaneChange(selectedPlane);
 }
 
@@ -99,7 +94,6 @@ void HeatingCurrentView::saveCurrentSettings()
 {
     setBusy(true);
     QtConcurrent::run([this]{
-        qDebug() << "save current settings to the DB";
         HeatSettingsPayload payload;
         payload.mMasterOn = mMasterOn;
 
@@ -130,13 +124,11 @@ void HeatingCurrentView::saveCurrentSettings()
 
 void HeatingCurrentView::resetCurrentSettings()
 {
-    qDebug() << "Retrieve and Reload the settings from the DB";
     handleProfileSelection(mCurrentHeatingProfile);
 }
 
 void HeatingCurrentView::applyMultiSetter(int value)
 {
-    qDebug() << "applyMultisetter with value :" <<value;
     mZoneFrontControl->applyMultiSetter(value);
 
 }

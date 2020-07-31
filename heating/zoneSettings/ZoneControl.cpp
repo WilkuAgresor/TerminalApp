@@ -24,7 +24,7 @@ void ZoneControl::addOrUpdateZoneSetting(const std::vector<HeatZoneSetting> &set
 void ZoneControl::addOrUpdateZoneSetting(const HeatZoneSetting &setting)
 {
     auto it = std::find_if(mRoomSettings.begin(), mRoomSettings.end(),
-            [&setting](const std::unique_ptr<RoomSetting>& x) { return x->id == setting.mZoneId;});
+            [&setting](const std::unique_ptr<RoomSetting>& x) { return x->mZoneName == setting.mZoneName;});
     if(it != mRoomSettings.end())
     {
         (*it)->updateZoneSetting(setting);
@@ -50,7 +50,9 @@ void ZoneControl::addZoneSettingObject(const HeatZoneSetting &setting)
     auto roomSetting = std::unique_ptr<RoomSetting>(new RoomSetting(this,
                                                                     mSetWidgetPtr,
                                                                     mCurTempWidgetPtr,
+                                                                    setting.mZoneName,
                                                                     setting.mZoneId,
+                                                                    setting.mCurrentTemp,
                                                                     setting.mSetTemperature,
                                                                     setting.mIsOn,
                                                                     setting.mGuiSettings));
@@ -88,7 +90,7 @@ void ZoneControl::setAllForMultiUpdate()
 
 void ZoneControl::checkForMultiUpdate(QString roomId)
 {
-    auto room = findRoomById(roomId);
+    auto room = findZoneByName(roomId);
     if(room)
         room->checkForMultiSetter();
 }
@@ -109,11 +111,11 @@ void ZoneControl::handlePlaneChange(int selectedPlane)
     }
 }
 
-RoomSetting *ZoneControl::findRoomById(const QString &roomId)
+RoomSetting *ZoneControl::findZoneByName(const QString &zoneName)
 {
     for(auto& zone: mRoomSettings)
     {
-        if(zone->id == roomId)
+        if(zone->mZoneName == zoneName)
         {
             return zone.get();
         }

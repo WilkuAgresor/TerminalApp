@@ -37,7 +37,4 @@ void LightsApp::handleReprovisionMessage(const LightSettingsMessage &message, co
     }
 
     mLightsView.handleSettingsChange(payload.mLightControllers);
-
-
-//    mCurrentView->setBusy(false);
 }

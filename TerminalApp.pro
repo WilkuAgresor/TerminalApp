@@ -1,4 +1,4 @@
-QT += quick widgets
+QT += quick widgets charts
 CONFIG += c++14
 
 # The following define makes your compiler emit warnings if you use
@@ -14,9 +14,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     ../common/subsystems/heating/HeatingRetrieveMessage.cpp \
+    ../common/subsystems/heating/HeatingRetrieveStatistics.cpp \
     ../common/subsystems/topology/topologyMessages.cpp \
     ../common/subsystems/lights/LightControllerSettings.cpp \
     ../common/subsystems/lights/LightsRetrieveMessage.cpp \
+    heating/HeatingCommon.cpp \
+    heating/HeatingStatistics.cpp \
     heating/zoneSettings/ZoneControl.cpp \
     heating/zoneSettings/ZoneSetting.cpp \
     lights/LightsApp.cpp \
@@ -42,6 +45,7 @@ SOURCES += \
     ../common/subsystems/alarm/alarmSetMessage.cpp \
     ../common/json/jsonSerialization.cpp \
     ../common/messages/replyMessage.cpp \
+    ../common/messages/partedMessage.cpp \
     Receiver.cpp \
     MessageHandler.cpp \
     ../common/subsystems/heating/HeatingZoneSettings.cpp
@@ -61,10 +65,12 @@ else: unix:!android: target.path = /home/pi/
 
 HEADERS += \
     ../common/subsystems/heating/HeatingRetrieveMessage.hpp \
+    ../common/subsystems/heating/HeatingRetrieveStatistics.hpp \
     ../common/subsystems/topology/topologyMessages.hpp \
     ../common/subsystems/lights/LightControllerSettings.hpp \
     ../common/subsystems/lights/LightsRetrieveMessage.hpp \
     ../common/subsystems/lights/LightsDictionary.hpp \
+    heating/HeatingCommon.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
     MainApp.hpp \
@@ -82,12 +88,14 @@ HEADERS += \
     ../common/subsystems/alarm/alarmSetMessage.hpp \
     ../common/json/jsonSerialization.hpp \
     ../common/messages/replyMessage.hpp \
+    ../common/messages/partedMessage.hpp \
     Receiver.hpp \
     ../common/CommonDefinitions.hpp \
     Components.hpp \
     MessageHandler.hpp \
     ../common/subsystems/heating/HeatingDictionary.hpp \
     ../common/subsystems/heating/HeatingZoneSettings.hpp \
+    heating/HeatingStatistics.hpp \
     heating/zoneSettings/ZoneControl.hpp \
     heating/zoneSettings/ZoneSetting.hpp \
     lights/LightsApp.hpp \

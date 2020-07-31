@@ -28,11 +28,7 @@ SimpleLightControllerForm {
 
     function setState( state )
     {
-        if(isOn !== state)
-        {
-            lightOnChanged( state )
-            setStateInternal( state )
-        }
+        setStateInternal( state )
     }
 
     function setVisible( isVisible )
@@ -41,13 +37,6 @@ SimpleLightControllerForm {
     }
 
     mouseArea.onClicked: {
-        if(isOn == true)
-        {
-            setState(false)
-        }
-        else
-        {
-            setState(true)
-        }
+        lightOnChanged(isOn)
     }
 }

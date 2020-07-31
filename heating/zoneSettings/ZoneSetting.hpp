@@ -11,13 +11,13 @@ class RoomSetting : public QObject
 {
     Q_OBJECT
 public:
-    RoomSetting(QObject* parent, QObject* setWidget, QObject* curWidget, QString roomId, int setTemp, bool isOn, const HeatZoneGuiSettings& guiSettings);
+    RoomSetting(QObject* parent, QObject* setWidget, QObject* curWidget, QString zoneName, int zoneId, int curTemp, int setTemp, bool isOn, const HeatZoneGuiSettings& guiSettings);
     ~RoomSetting() = default;
 
-    void setCurrentTemperature(quint16 temp);
-    void setSetterTemperature(quint16 setTemp);
-    quint16 getSetterTemperature();
-    quint16 getCurrentTemperature();
+    void setCurrentTemperature(qint16 temp);
+    void setSetterTemperature(qint16 setTemp);
+    qint16 getSetterTemperature();
+    qint16 getCurrentTemperature();
 
     void checkForMultiSetter();
     void selectForMultiUpdate();
@@ -30,7 +30,7 @@ public:
     void setVisibility(bool isVisible);
 
 
-    bool operator==(const RoomSetting &q) {return id==q.id;}
+    bool operator==(const RoomSetting &q) {return mZoneName==q.mZoneName;}
 
     QObject* mSetterWidget;
     QObject* mZoneSetObject;
@@ -39,9 +39,10 @@ public:
 
     QObject* mCurWidget;
 
-    QString id;
-    quint16 mSetTemperature = 2200;
-    quint16 mCurTemperature = 2200;
+    QString mZoneName;
+    int mZoneId;
+    qint16 mCurTemperature = TEMPERATURE_INVALID;
+    qint16 mSetTemperature = TEMPERATURE_INVALID;
 
     bool mIsOn;
     HeatZoneGuiSettings mGuiSettings;
@@ -53,7 +54,4 @@ public slots:
     void handleSelectedForMultiUpdate();
     void handleSetValueChanged(int newValue);
     void handleSwitchedOnOff(bool value);
-
-private:
-    QString formatTemperature(quint16 temp);
 };

@@ -1,16 +1,17 @@
 #include <heating/zoneSettings/ZoneSetting.hpp>
 #include <QSpinBox>
+#include <heating/HeatingCommon.hpp>
 
-RoomSetting::RoomSetting(QObject *parent, QObject *setWidget, QObject *curWidget, QString roomId, int setTemp, bool isOn, const HeatZoneGuiSettings &guiSettings)
-    :QObject(parent), mSetterWidget(setWidget), mCurWidget(curWidget), id(roomId), mSetTemperature(setTemp), mIsOn(isOn), mGuiSettings(guiSettings)
+RoomSetting::RoomSetting(QObject *parent, QObject *setWidget, QObject *curWidget, QString zoneName, int zoneId, int curTemp, int setTemp, bool isOn, const HeatZoneGuiSettings &guiSettings)
+    :QObject(parent), mSetterWidget(setWidget), mCurWidget(curWidget), mZoneName(zoneName), mZoneId(zoneId), mCurTemperature(curTemp), mSetTemperature(setTemp), mIsOn(isOn), mGuiSettings(guiSettings)
 {
     QMetaObject::invokeMethod(setWidget, "addZoneControlPanel", Qt::DirectConnection,
-                              Q_ARG(QVariant, QVariant(id)),
+                              Q_ARG(QVariant, QVariant(mZoneName)),
                               Q_ARG(QVariant, QVariant(mSetTemperature)),
                               Q_ARG(QVariant, QVariant(mIsOn)));
 
     QMetaObject::invokeMethod(curWidget, "addCurTempWidget", Qt::DirectConnection,
-                              Q_ARG(QVariant, QVariant(id)),
+                              Q_ARG(QVariant, QVariant(mZoneName)),
                               Q_ARG(QVariant, QVariant(formatTemperature(mCurTemperature))),
                               Q_ARG(QVariant, QVariant(guiSettings.mPlane)),
                               Q_ARG(QVariant, QVariant(guiSettings.mX)),
@@ -20,8 +21,8 @@ RoomSetting::RoomSetting(QObject *parent, QObject *setWidget, QObject *curWidget
                               Q_ARG(QVariant, QVariant(guiSettings.mFontSize))
                               );
 
-    mZoneSetObject = mSetterWidget->findChild<QObject*>(HEATING_ZONE_ID_PREFIX + id, Qt::FindChildOption::FindChildrenRecursively);
-    mZoneCurObject = mCurWidget->findChild<QObject*>(HEATING_ZONE_CUR_PREFIX + id, Qt::FindChildOption::FindChildrenRecursively);
+    mZoneSetObject = mSetterWidget->findChild<QObject*>(HEATING_ZONE_ID_PREFIX + mZoneName, Qt::FindChildOption::FindChildrenRecursively);
+    mZoneCurObject = mCurWidget->findChild<QObject*>(HEATING_ZONE_CUR_PREFIX + mZoneName, Qt::FindChildOption::FindChildrenRecursively);
 
     QObject::connect(mZoneSetObject, SIGNAL(valueChanged(int)), this, SLOT(handleSetValueChanged(int)));
     QObject::connect(mZoneSetObject, SIGNAL(switchedOnOff(bool)), this, SLOT(handleSwitchedOnOff(bool)));
@@ -33,35 +34,26 @@ RoomSetting::RoomSetting(QObject *parent, QObject *setWidget, QObject *curWidget
     }
 }
 
-QString RoomSetting::formatTemperature(quint16 temp)
-{
-    double dTemp = static_cast<double>(temp)/100;
-    QString text = QString().setNum(dTemp, 'f', 2);
-    text.append('\xB0');
-    text.append(" C");
-    return text;
-}
-
-void RoomSetting::setCurrentTemperature(quint16 temp)
+void RoomSetting::setCurrentTemperature(qint16 temp)
 {   
     mCurTemperature = temp;
     QMetaObject::invokeMethod(mZoneCurObject, "setCurrentTemperature", Qt::DirectConnection,
                               Q_ARG(QVariant, QVariant(formatTemperature(temp))));
 }
 
-void RoomSetting::setSetterTemperature(quint16 setTemp)
+void RoomSetting::setSetterTemperature(qint16 setTemp)
 {
     mSetTemperature = setTemp;
     QMetaObject::invokeMethod(mZoneSetObject, "setSetterValue", Qt::DirectConnection,
                               Q_ARG(QVariant, QVariant(setTemp)));
 }
 
-quint16 RoomSetting::getSetterTemperature()
+qint16 RoomSetting::getSetterTemperature()
 {
     return mSetTemperature;
 }
 
-quint16 RoomSetting::getCurrentTemperature()
+qint16 RoomSetting::getCurrentTemperature()
 {
     return mCurTemperature;
 }
@@ -97,13 +89,17 @@ bool RoomSetting::isSelectedForMultiUpdate()
 
 HeatZoneSetting RoomSetting::getZoneSetting()
 {
-    return HeatZoneSetting(mSetTemperature, mIsOn, id, mGuiSettings);
+    return HeatZoneSetting(mSetTemperature, mIsOn, mZoneName, mZoneId, mGuiSettings);
 }
 
 void RoomSetting::updateZoneSetting(const HeatZoneSetting& setting)
 {
-    setSetterTemperature(setting.mSetTemperature);
-    setIsOn(setting.mIsOn);
+    if(setting.mSetTempChanged)
+        setSetterTemperature(setting.mSetTemperature);
+    if(setting.mCurrentTempChanged)
+        setCurrentTemperature(setting.mCurrentTemp);
+    if(setting.mIsOnChanged)
+        setIsOn(setting.mIsOn);
 }
 
 void RoomSetting::setVisibility(bool isVisible)
@@ -118,7 +114,7 @@ void RoomSetting::setVisibility(bool isVisible)
 
 void RoomSetting::handleSelectedForMultiUpdate()
 {
-    qDebug() << "Selected for multi update: "<<id;
+    qDebug() << "Selected for multi update: "<<mZoneName;
     mIsSelectedForMultiUpdate = !mIsSelectedForMultiUpdate;
 }
 
@@ -133,11 +129,11 @@ void RoomSetting::handleSwitchedOnOff(bool value)
     mIsOn = value;
     if(value)
     {
-        qDebug() << "zone " << id<<" switched on";
+        qDebug() << "zone " << mZoneName<<" switched on";
     }
     else
     {
-        qDebug() << "zone " << id<<" switched off";
+        qDebug() << "zone " << mZoneName<<" switched off";
     }
 }
 
