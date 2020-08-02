@@ -13,7 +13,7 @@ HeatingApp::HeatingApp(QObject* rootObject, QObject *parent, Components *compone
 {
 }
 
-void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromAddress, int /*fromPort*/)
+void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromAddress)
 {
     switch(message.getHeader().getType())
     {

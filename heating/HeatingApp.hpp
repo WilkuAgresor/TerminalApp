@@ -15,7 +15,7 @@ public:
     HeatingApp(QObject* rootObject, QObject* parent, Components* components);
     ~HeatingApp() = default;
 
-    void handleMessage(const Message& message, const QHostAddress &fromAddress, int fromPort);
+    void handleMessage(const Message& message, const QHostAddress &fromAddress);
 private:
     void handleReprovisionMessage(const HeatSettingsMessage& message, const QHostAddress &fromAddress);
  //   void handleStatusUpdateMessage(const HeatStatusMessage& message);

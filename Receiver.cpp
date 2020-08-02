@@ -8,16 +8,13 @@ TerminalReceiver::TerminalReceiver(QObject *parent, Components& components)
 
 }
 
-void TerminalReceiver::handleMessage(QNetworkDatagram msg)
+void TerminalReceiver::handleMessage(Message msg, QHostAddress fromAddr)
 {
     try
     {
-        auto messageHandler = new MessageHandler(msg, mComponents);
+        auto messageHandler = new MessageHandler(std::move(msg), fromAddr, mComponents);
+        messageHandler->setAutoDelete(true);
         messageHandler->run();
-
-//        messageHandler->setAutoDelete(true);
-////        connect(messageHandler, SIGNAL(result(QNetworkDatagram)), this, SLOT(sendResponse(QNetworkDatagram)),Qt::QueuedConnection);
-//        QThreadPool::globalInstance()->start(messageHandler);
     }
     catch (const std::exception& ex)
     {

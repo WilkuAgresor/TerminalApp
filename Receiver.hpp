@@ -9,7 +9,7 @@ public:
     TerminalReceiver(QObject *parent, Components& components);
     ~TerminalReceiver() override = default;
 
-    void handleMessage(QNetworkDatagram msg) override;
+    void handleMessage(Message msg, QHostAddress fromAddr) override;
 private:
     Components& mComponents;
 };

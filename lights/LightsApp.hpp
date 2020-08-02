@@ -14,9 +14,9 @@ public:
     LightsApp(QObject* rootObject, QObject* parent, Components* components);
     ~LightsApp() = default;
 
-    void handleMessage(const Message& message, const QHostAddress &fromAddress, int fromPort);
+    void handleMessage(const Message& message, const QHostAddress &fromAddress);
 private:
-    void handleReprovisionMessage(const LightSettingsMessage& message, const QHostAddress &fromAddress, int fromPort);
+    void handleReprovisionMessage(const LightSettingsMessage& message, const QHostAddress &fromAddress);
 
     Components* mComponents;
     QObject* mRootObject;

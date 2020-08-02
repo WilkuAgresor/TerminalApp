@@ -12,19 +12,19 @@ LightsApp::LightsApp(QObject* rootObject, QObject *parent, Components *component
 {
 }
 
-void LightsApp::handleMessage(const Message &message, const QHostAddress &fromAddress, int fromPort)
+void LightsApp::handleMessage(const Message &message, const QHostAddress &fromAddress)
 {
     switch(message.getHeader().getType())
     {
     case MessageType::LIGHTS_UPDATE:
-        handleReprovisionMessage(static_cast<const LightSettingsMessage&>(message), fromAddress, fromPort);
+        handleReprovisionMessage(static_cast<const LightSettingsMessage&>(message), fromAddress);
         break;
     default:
         qDebug()<< "unsupported message type in Lights subsystem";
     }
 }
 
-void LightsApp::handleReprovisionMessage(const LightSettingsMessage &message, const QHostAddress& fromAddress, int /*fromPort*/)
+void LightsApp::handleReprovisionMessage(const LightSettingsMessage &message, const QHostAddress& fromAddress)
 {
     auto payload = message.payload();
     if(mComponents->getMasterAddress().isNull())

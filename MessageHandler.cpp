@@ -6,35 +6,34 @@
 #include <chrono>
 #include <thread>
 
-MessageHandler::MessageHandler(QNetworkDatagram datagram, Components& components)
-    : mDatagram(datagram), mComponents(components)
+MessageHandler::MessageHandler(Message &&msg, QHostAddress fromAddr, Components& components)
+    : mMsg(msg), mFromAddr(fromAddr), mComponents(components)
 {
 }
 
 void MessageHandler::run()
 {
-    Message msg(mDatagram.data());
 //    qDebug() << "parsed message: "<< msg.toString();
-    auto header = msg.getHeader();
+    auto header = mMsg.getHeader();
 
     auto messageType = header.getType();
 
     if(isHeatingMessage(messageType))
     {
-        mComponents.getHeatingApp().handleMessage(msg, mDatagram.senderAddress(), mDatagram.senderPort());
+        mComponents.getHeatingApp().handleMessage(mMsg, mFromAddr);
     }
     else if(isLightsMessage(messageType))
     {
-        mComponents.getLightsApp().handleMessage(msg, mDatagram.senderAddress(), mDatagram.senderPort());
+        mComponents.getLightsApp().handleMessage(mMsg, mFromAddr);
     }
     else if(messageType == MessageType::TOPOLOGY_REQUEST_CHECKIN)
     {
         {
             TopologyCheckInMessage message;
 
-            if(mDatagram.senderAddress() != mComponents.getMasterAddress())
+            if(mFromAddr != mComponents.getMasterAddress())
             {
-                mComponents.setMasterAddress(mDatagram.senderAddress());
+                mComponents.setMasterAddress(mFromAddr);
             }
 
             if(header.mReplyPort != mComponents.getMasterPort())

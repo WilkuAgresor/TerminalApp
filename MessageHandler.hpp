@@ -12,14 +12,15 @@ class MessageHandler : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
-    MessageHandler(QNetworkDatagram datagram, Components &components);
+    MessageHandler(Message&& msg, QHostAddress fromAddr, Components &components);
     ~MessageHandler() = default;
     void run();
 
 signals:
     void result(QNetworkDatagram datagram);
 private:
-    QNetworkDatagram mDatagram;
+    Message mMsg;
+    QHostAddress mFromAddr;
     Components& mComponents;
 };
 
