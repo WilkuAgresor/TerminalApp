@@ -14,6 +14,7 @@
 #include <iostream>
 #include <QDateTime>
 
+
 static const QtMessageHandler QT_DEFAULT_MESSAGE_HANDLER = qInstallMessageHandler(0);
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)

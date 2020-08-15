@@ -13,7 +13,7 @@ void MainApplication::initiate(QObject *rootObject)
 {
     mRootObject = rootObject;
     mComponents = new Components(parent(), rootObject);
-    mReceiver = new TerminalReceiver(parent(), *mComponents);
+    mReceiver = new TerminalReceiver(parent(), mComponents->getNetworkPortRepository(), *mComponents);
 }
 
 

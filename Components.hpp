@@ -10,7 +10,7 @@ struct Components
 {
     Components(QObject* parent, QObject* rootObject):
         mRootObject(rootObject),
-        mSender(new Sender(9999, parent)),
+        mSender(new Sender(9999, mNetworkPortRepository, parent)),
         mHeatingApp(new HeatingApp(mRootObject, parent, this)),
         mLightsApp(new LightsApp(mRootObject, parent, this))
     {
@@ -57,12 +57,17 @@ struct Components
     {
         return mMasterControllerPort;
     }
+    ReceivePortsBank& getNetworkPortRepository()
+    {
+        return mNetworkPortRepository;
+    }
 
 private:
     DataInitPhase mDataInitPhase = DataInitPhase::UNINITIALIZED;
     QHostAddress mMasterControllerAddress = QHostAddress(QHostAddress::SpecialAddress::Null);
     int mMasterControllerPort = -1;
 
+    ReceivePortsBank mNetworkPortRepository;
     QObject* mRootObject;
     Sender* mSender;
     HeatingApp* mHeatingApp;

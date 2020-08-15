@@ -1,8 +1,8 @@
 #include <Receiver.hpp>
 #include <MessageHandler.hpp>
 
-TerminalReceiver::TerminalReceiver(QObject *parent, Components& components)
-    : Receiver(TERMINAL_LISTEN_PORT, parent),
+TerminalReceiver::TerminalReceiver(QObject *parent, ReceivePortsBank &networkPortBank, Components& components)
+    : Receiver(TERMINAL_LISTEN_PORT, networkPortBank, parent),
       mComponents(components)
 {
 

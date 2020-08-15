@@ -6,7 +6,7 @@
 class TerminalReceiver : public Receiver
 {
 public:
-    TerminalReceiver(QObject *parent, Components& components);
+    TerminalReceiver(QObject *parent, ReceivePortsBank& networkPortBank, Components& components);
     ~TerminalReceiver() override = default;
 
     void handleMessage(Message msg, QHostAddress fromAddr) override;
