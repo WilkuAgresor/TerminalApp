@@ -1,3 +1,6 @@
+
+include(risip/risip-voipsdk.pri)
+
 QT += quick widgets charts
 CONFIG += c++14
 

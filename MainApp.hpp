@@ -10,13 +10,14 @@
 
 #include <Components.hpp>
 #include <Receiver.hpp>
+#include <risip.h>
 
 class MainApplication : public QObject
 {
     Q_OBJECT
 public:
     explicit MainApplication(QObject *parent = nullptr);
-    ~MainApplication() = default;
+    ~MainApplication();
 
     void initiate(QObject* rootObject);
 
@@ -24,4 +25,7 @@ private:
     QObject* mRootObject;
     Components* mComponents;
     TerminalReceiver* mReceiver;
+    risip::RisipEndpoint mRisipEndpoint;
+    risip::RisipAccountConfiguration* mRisipAccConfig;
+    risip::RisipAccount* mAccount;
 };
