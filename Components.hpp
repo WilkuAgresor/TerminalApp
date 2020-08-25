@@ -5,6 +5,7 @@
 
 #include <heating/HeatingApp.hpp>
 #include <lights/LightsApp.hpp>
+#include <voiceCom/VoiceCom.hpp>
 
 struct Components
 {
@@ -12,7 +13,8 @@ struct Components
         mRootObject(rootObject),
         mSender(new Sender(9999, mNetworkPortRepository, parent)),
         mHeatingApp(new HeatingApp(mRootObject, parent, this)),
-        mLightsApp(new LightsApp(mRootObject, parent, this))
+        mLightsApp(new LightsApp(mRootObject, parent, this)),
+        mVoiceCom(new VoiceCom(parent))
     {
     }
 
@@ -61,6 +63,10 @@ struct Components
     {
         return mNetworkPortRepository;
     }
+    VoiceCom& getVoiceCom()
+    {
+        return *mVoiceCom;
+    }
 
 private:
     DataInitPhase mDataInitPhase = DataInitPhase::UNINITIALIZED;
@@ -72,4 +78,6 @@ private:
     Sender* mSender;
     HeatingApp* mHeatingApp;
     LightsApp* mLightsApp;
+    VoiceCom* mVoiceCom;
+
 };

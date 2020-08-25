@@ -25,7 +25,4 @@ private:
     QObject* mRootObject;
     Components* mComponents;
     TerminalReceiver* mReceiver;
-    risip::RisipEndpoint mRisipEndpoint;
-    risip::RisipAccountConfiguration* mRisipAccConfig;
-    risip::RisipAccount* mAccount;
 };

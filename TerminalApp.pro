@@ -52,7 +52,8 @@ SOURCES += \
     ../common/messages/partedMessage.cpp \
     Receiver.cpp \
     MessageHandler.cpp \
-    ../common/subsystems/heating/HeatingZoneSettings.cpp
+    ../common/subsystems/heating/HeatingZoneSettings.cpp \
+    voiceCom/VoiceCom.cpp
 
 RESOURCES += qml.qrc
 
@@ -108,7 +109,8 @@ HEADERS += \
     lights/lightControllers/ColorLightController.hpp \
     lights/lightControllers/DimmableLightController.hpp \
     lights/lightControllers/ILightController.hpp \
-    lights/lightControllers/SimpleLightController.hpp
+    lights/lightControllers/SimpleLightController.hpp \
+    voiceCom/VoiceCom.hpp
 
 DISTFILES += \
     parter.png \
