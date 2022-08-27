@@ -50,4 +50,8 @@ void MessageHandler::run()
             mComponents.setDataInitPhase(DataInitPhase::READY);
         }
     }
+    else if(messageType == MessageType::TOPOLOGY_MASTER_SHUTDOWN)
+    {
+        mComponents.setDataInitPhase(DataInitPhase::UNINITIALIZED);
+    }
 }

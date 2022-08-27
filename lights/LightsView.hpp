@@ -14,8 +14,10 @@ public:
     void handleSettingsChange(const std::vector<LightControllerSettings>& settings);
 public slots:
     void handlePlaneChange(int selectedPlane);
+    void handleGuiSettingsChange(QString name, int x, int y, int plane);
 private:
     void addLightController(const LightControllerSettings& settings);
+    void populateSettingsSelector();
 
     int mActivePlane = 0;
     Components* mComponents;

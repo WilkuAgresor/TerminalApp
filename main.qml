@@ -22,7 +22,7 @@ ApplicationWindow {
 
     SplashForm {
         id: splashScreen
-        visible: true
+        visible: false
         objectName: "splashScreen"
 
         property int password: 0
@@ -57,13 +57,13 @@ ApplicationWindow {
 
     }
 
-    StackLayout {
+    SwipeView {
         id: mainLayout
         anchors.fill: parent
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
         currentIndex: tabBar.currentIndex
-        visible: false
+        visible: true
         objectName: "mainLayout"
 
         ShortcutsForm {

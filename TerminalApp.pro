@@ -1,7 +1,7 @@
 
 include(risip/risip-voipsdk.pri)
 
-QT += quick widgets charts
+QT += quick widgets charts multimedia
 CONFIG += c++14
 
 # The following define makes your compiler emit warnings if you use

@@ -1,6 +1,11 @@
 #include "VoiceCom.hpp"
 #include <QDebug>
 
+#include <risipratemanager.h>
+
+#include <chrono>
+#include <thread>
+
 VoiceCom::VoiceCom(QObject *parent)
  : QObject(parent)
 {
@@ -23,7 +28,6 @@ void VoiceCom::initiate()
     mRisipAccConfig->setUserName("terminal_pietro");
     mRisipAccConfig->setPassword("4444");
     mRisipAccConfig->setServerAddress("192.168.0.150:5060");
-    mRisipAccConfig->setLocalPort(5060);
 
     mAccount = risip::Risip::instance()->createAccount(mRisipAccConfig);
 
@@ -34,15 +38,14 @@ void VoiceCom::initiate()
     auto callManager = risip::RisipCallManager::instance();
     callManager->setActiveAccount(mAccount);
 
-
-    QObject::connect(callManager, SIGNAL(incomingCall(risip::RisipCall*)), this, SLOT(incomingCall(risip::RisipCall*)));
-
-
-    risip::Risip::instance()->accessPhoneMedia();
+    QObject::connect(callManager, SIGNAL(incomingCall(risip::RisipCall*)), this, SLOT(incomingCall(risip::RisipCall*)), Qt::QueuedConnection);
 }
 
 void VoiceCom::incomingCall(risip::RisipCall* call)
 {
     qDebug() << "INCOMING CALL SLOT";
+    using namespace std::chrono;
+    std::this_thread::sleep_for(seconds(1));
+
     call->answer();
 }

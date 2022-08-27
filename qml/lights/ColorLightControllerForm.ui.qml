@@ -11,8 +11,8 @@ Item {
     height: 45
     property alias mouseArea: mouseArea
     property alias colorLightController: colorLightController
-    property alias colorLightControllerY: colorLightController.y
-    property alias colorLightControllerX: colorLightController.x
+    property alias lightControllerY: colorLightController.y
+    property alias lightControllerX: colorLightController.x
     property alias popup: popup
     property alias slider: slider
     property alias image: image
@@ -30,6 +30,7 @@ Item {
         id: mouseArea
         anchors.fill: parent
         pressAndHoldInterval : 500
+        propagateComposedEvents: true
     }
 
     Popup {

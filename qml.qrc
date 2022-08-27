@@ -57,5 +57,7 @@
         <file>qml/heating/HeatingStatistics.qml</file>
         <file>qml/heating/HeatingStatisticsForm.ui.qml</file>
         <file>qml/heating/statistics/ZoneListView.qml</file>
+        <file>qml/intercom/IncomingCallPopup.qml</file>
+        <file>qml/intercom/IncomingCallPopupForm.ui.qml</file>
     </qresource>
 </RCC>

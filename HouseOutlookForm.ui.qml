@@ -6,11 +6,17 @@ Page {
     id: houseViewPage
     width: 1280
     height: 640
+    property alias settingsLightMouseArea: settingsLightMouseArea
+    property alias settingsLightLabel: settingsLightLabel
+    property alias settingsLightSelector: settingsLightSelector
+    property alias settingsLightSaverButton: settingsLightSaverButton
+    property alias settingsLightButton: settingsLightButton
     property alias pietroButton: pietroButton
     property alias parterButton: parterButton
     property alias podworkoButton: podworkoButton
     property alias pietroImage: pietroImage
     property alias parterImage: parterImage
+    property alias changePointer: changePointer
 
     RowLayout {
         anchors.fill: parent
@@ -86,6 +92,58 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }
+    }
+
+    Button {
+        id: settingsLightButton
+        objectName: settingsLightButton
+        x: 25
+        y: 657
+        text: qsTr("SETTINGS")
+    }
+
+    Button {
+        visible: false
+        id: settingsLightSaverButton
+        objectName: settingsLightSaverButton
+        x: 543
+        y: 657
+        text: qsTr("SAVE")
+    }
+
+    ComboBox {
+        visible: false
+        id: settingsLightSelector
+        objectName: settingsLightSelector
+        x: 127
+        y: 657
+        width: 156
+        height: 48
+    }
+
+    Label {
+        visible: false
+        id: settingsLightLabel
+        objectName: settingsLightLabel
+        x: 312
+        y: 673
+        width: 210
+        height: 17
+        text: qsTr("x: y: plane:")
+    }
+    MouseArea {
+        id: settingsLightMouseArea
+        enabled: false
+        anchors.fill: parent
+        propagateComposedEvents: true
+    }
+
+    Rectangle {
+        visible: false
+        id: changePointer
+        width: 50
+        height: 50
+        color: "red"
     }
 }
 

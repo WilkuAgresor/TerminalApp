@@ -13,7 +13,7 @@ public:
     virtual void init() = 0;
 
     virtual ~ILightController();
-    int getType();
+    LightControllerType getType();
     int getId();
     QString getName();
     bool getIsOn();
@@ -21,11 +21,13 @@ public:
     QString getColor();
 
     LightControllerGuiSettings getGuiSettings();
+    LightControllerSettings getControllerSettings();
 
     void handlePlaneChange(int selectedPlane);
     virtual void handleSettingsChangeFromController(const LightControllerSettings& settings);
 
     void commitChangedSettings(const LightControllerSettings &settings);
+
 protected:
     QObject* mLightsViewObject;
     Components* mComponents;

@@ -5,21 +5,29 @@ LightsMainViewForm {
     objectName: lightsMainView
 
     signal planeChanged(int plane)
+    signal guiSettingsChange(string name, int x, int y, int plane)
 
     houseOutlook.onPlaneChanged:
     {
         lightsMainView.planeChanged(selectedPlane)
     }
+    houseOutlook.onSettingsChanged:
+    {
+        //extract a half of the light image size (width =50)
+        lightsMainView.guiSettingsChange(name, x - 25, y - 25, plane)
+    }
 
     function addSimpleLightController( name, isOn, x, y)
     {
+        var lightName = "lightsSimpleControl_" + name
+
         var controllerObject = Qt.createComponent("SimpleLightController.qml")
 
         var object = controllerObject.createObject(lightsMainView)
 
-        object.objectName = "lightsSimpleControl_" + name
-        object.simpleLightControllerX = x
-        object.simpleLightControllerY = y
+        object.objectName = lightName
+        object.lightControllerX = x
+        object.lightControllerY = y
         object.setStateInternal(isOn)
     }
 
@@ -29,8 +37,8 @@ LightsMainViewForm {
         var object = component.createObject(lightsMainView)
 
         object.objectName = "lightsDimmableControl_" + name
-        object.dimmableLightControllerX = x
-        object.dimmableLightControllerY = y
+        object.lightControllerX = x
+        object.lightControllerY = y
         object.setStateInternal(isOn)
         object.setDimm(dimm)
     }
@@ -41,10 +49,15 @@ LightsMainViewForm {
         var object = component.createObject(lightsMainView)
 
         object.objectName = "lightsColorControl_" + name
-        object.x = x
-        object.y = y
+        object.lightControllerX = x
+        object.lightControllerY = y
         object.setStateInternal(isOn)
         object.setDimm(dimm)
 //        object.setColor(color)
+    }
+
+    function populateSettingsSelector(entityList)
+    {
+        houseOutlook.populateSettingsSelector(entityList)
     }
 }

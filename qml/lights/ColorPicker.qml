@@ -10,7 +10,7 @@ ColorPickerForm {
 
     function updateSelectedColor()
     {
-        var color = Qt.rgba(sliderR.value/255., sliderG.value/225., sliderB.value/255., 1)
+        var color = Qt.rgba(sliderR.value/255., sliderG.value/255., sliderB.value/255., 1)
         selectedColorBox.color = color;
         lightColorChanged(color)
     }

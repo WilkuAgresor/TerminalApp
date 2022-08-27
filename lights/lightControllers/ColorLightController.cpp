@@ -12,8 +12,6 @@ ColorLightController::~ColorLightController()
 
 void ColorLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    qDebug() << "settings 3";
-
     if(settings.mColorChanged && (settings.mColor != getColor()))
     {
         mControllerSettings.mColor = settings.mColor;

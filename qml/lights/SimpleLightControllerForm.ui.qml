@@ -7,8 +7,8 @@ Item {
 
     property alias mouseArea: mouseArea
     property alias simpleLightController: simpleLightController
-    property alias simpleLightControllerY: simpleLightController.y
-    property alias simpleLightControllerX: simpleLightController.x
+    property alias lightControllerY: simpleLightController.y
+    property alias lightControllerX: simpleLightController.x
 
     property alias image: image
 
@@ -22,5 +22,6 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        propagateComposedEvents: true
     }
 }
