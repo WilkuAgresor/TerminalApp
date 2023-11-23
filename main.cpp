@@ -9,6 +9,9 @@
 #include <QNetworkDatagram>
 #include <MainApp.hpp>
 
+#include <VLCQtCore/Common.h>
+#include <VLCQtQml/QmlVideoPlayer.h>
+
 #include <heating/HeatingCurrentView.hpp>
 
 #include <iostream>
@@ -25,7 +28,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 }
 
 int main(int argc, char *argv[])
-{
+{    
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));  
     qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
 
@@ -34,6 +37,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     qInstallMessageHandler(myMessageOutput);
+
+    VlcCommon::setPluginPath(app.applicationDirPath() + "/plugins");
+    qmlRegisterType<VlcQmlVideoPlayer>("VLCQtl", 1, 0, "VlcVideoPlayer");
+
+//    VlcQmlVideoPlayer::registerPlugin();
 
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));

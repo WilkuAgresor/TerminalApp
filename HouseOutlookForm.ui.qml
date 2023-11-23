@@ -11,9 +11,6 @@ Page {
     property alias settingsLightSelector: settingsLightSelector
     property alias settingsLightSaverButton: settingsLightSaverButton
     property alias settingsLightButton: settingsLightButton
-    property alias pietroButton: pietroButton
-    property alias parterButton: parterButton
-    property alias podworkoButton: podworkoButton
     property alias pietroImage: pietroImage
     property alias parterImage: parterImage
     property alias changePointer: changePointer
@@ -30,9 +27,10 @@ Page {
             Image {
                 id: pietroImage
                 x: 13
-                y: 37
+                y: 50
                 width: 826
                 height: 550
+                anchors.horizontalCenterOffset: 67
                 anchors.horizontalCenter: parent.horizontalCenter
                 source: "resources/pietro-rzut3.png"
                 visible: false
@@ -41,82 +39,40 @@ Page {
             Image {
                 id: parterImage
                 x: 14
-                y: 51
+                y: 64
                 width: 990
                 height: 560
+                anchors.horizontalCenterOffset: 149
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: true
                 source: "resources/parter-rzut3.png"
-            }
-        }
-
-        Column {
-            id: column
-
-            width: 200
-            Layout.rightMargin: 20
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            layer.textureMirroring: ShaderEffectSource.NoMirroring
-
-            spacing: 80
-            Layout.fillHeight: false
-            Layout.fillWidth: true
-
-            Button {
-                id: podworkoButton
-                height: 130
-                text: qsTr("Ogród")
-                font.pointSize: 15
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-            }
-
-            Button {
-                id: pietroButton
-                height: 130
-                text: qsTr("Piętro")
-                font.pointSize: 15
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            Button {
-                id: parterButton
-                height: 130
-                text: qsTr("Parter")
-                font.pointSize: 15
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
 
     Button {
         id: settingsLightButton
-        objectName: settingsLightButton
+        objectName: "settingsLightButton"
         x: 25
-        y: 657
+        y: 557
         text: qsTr("SETTINGS")
     }
 
     Button {
         visible: false
         id: settingsLightSaverButton
-        objectName: settingsLightSaverButton
+        objectName: "settingsLightSaverButton"
         x: 543
-        y: 657
+        y: 557
         text: qsTr("SAVE")
     }
 
     ComboBox {
         visible: false
         id: settingsLightSelector
-        objectName: settingsLightSelector
+        objectName: "settingsLightSelector"
         x: 127
-        y: 657
+        y: 557
         width: 156
         height: 48
     }
@@ -124,9 +80,9 @@ Page {
     Label {
         visible: false
         id: settingsLightLabel
-        objectName: settingsLightLabel
+        objectName: "settingsLightLabel"
         x: 312
-        y: 673
+        y: 573
         width: 210
         height: 17
         text: qsTr("x: y: plane:")
@@ -149,7 +105,7 @@ Page {
 
 /*##^##
 Designer {
-    D{i:3;anchors_x:38;anchors_y:30}D{i:4;invisible:true}D{i:1;anchors_x:0;anchors_y:0}
+    D{i:3;anchors_x:38;anchors_y:30;invisible:true}D{i:4;invisible:true}D{i:1;anchors_x:0;anchors_y:0}
 }
 ##^##*/
 

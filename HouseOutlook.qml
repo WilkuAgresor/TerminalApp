@@ -1,5 +1,6 @@
 import QtQuick 2.12
-
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.0
 
 HouseOutlookForm {
 
@@ -11,28 +12,96 @@ HouseOutlookForm {
     property int newSettingX: 0
     property int newSettingY: 0
 
-    podworkoButton.onClicked:
-    {
-        parterImage.visible = false
-        pietroImage.visible = false
-        planeChanged(2)
-        currentPlane = 2
+
+    TabBar {
+        id: control
+        width: parent.width / 2
+        TabButton {
+            text: qsTr("Parter")
+            width: Math.max(100, control.width / 4)
+            onClicked:
+            {
+                pietroImage.visible = false
+                parterImage.visible = true
+                planeChanged(0)
+                currentPlane = 0
+            }
+        }
+        TabButton {
+            text: qsTr("Piętro")
+            width: Math.max(100, control.width / 4)
+            onClicked:
+            {
+                parterImage.visible = false
+                pietroImage.visible = true
+                planeChanged(1)
+                currentPlane = 1
+            }
+        }
+        TabButton {
+            text: qsTr("Podwórko")
+            width: Math.max(100, control.width / 4)
+            onClicked:
+            {
+                pietroImage.visible = false
+                parterImage.visible = true
+                planeChanged(0)
+                currentPlane = 0
+            }
+        }
     }
 
-    pietroButton.onClicked:
-    {
-        parterImage.visible = false
-        pietroImage.visible = true
-        planeChanged(1)
-        currentPlane = 1
-    }
-    parterButton.onClicked:
-    {
-        pietroImage.visible = false
-        parterImage.visible = true
-        planeChanged(0)
-        currentPlane = 0
-    }
+
+//    MenuBar {
+//        x: 0
+//        y: 0
+//        id: houseOutlookMenu
+//        Menu {
+//            title: qsTr("Poziom")
+//            Action {
+//                text: qsTr("Podwórko")
+//                onTriggered:
+//                {
+//                    parterImage.visible = false
+//                    pietroImage.visible = false
+//                    planeChanged(2)
+//                    currentPlane = 2
+//                }
+//            }
+//            MenuSeparator { }
+//            Action
+//            {
+//                text: qsTr("Parter")
+//                onTriggered:
+//                {
+//                    pietroImage.visible = false
+//                    parterImage.visible = true
+//                    planeChanged(0)
+//                    currentPlane = 0
+//                }
+//            }
+//            MenuSeparator { }
+//            Action
+//            {
+//                text: qsTr("Piętro")
+//                onTriggered:
+//                {
+//                    parterImage.visible = false
+//                    pietroImage.visible = true
+//                    planeChanged(1)
+//                    currentPlane = 1
+//                }
+//            }
+//            MenuSeparator { }
+//            Action { text: qsTr("Strych") }
+//        }
+//        Menu {
+//            title: qsTr("&Edit")
+//            Action { text: qsTr("Cu&t") }
+//            Action { text: qsTr("&Copy") }
+//            Action { text: qsTr("&Paste") }
+//        }
+//    }
 
     /// SETTINGS
     settingsLightButton.onClicked:
@@ -57,7 +126,6 @@ HouseOutlookForm {
     {
         if(settingsLightSelector.activeFocus !== "NONE")
         {
-            settingsLightMouseArea.raise()
             settingsLightMouseArea.enabled = true
             settingsLightLabel.text = "x: y: plane:"
         }

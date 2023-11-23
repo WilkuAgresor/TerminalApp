@@ -41,10 +41,13 @@ Page {
         id: grid
         x: 150
         y: 150
-        width: 424
-        height: 467
+        width: 318
+        height: 317
+        rows: 3
+        columns: 3
+        anchors.verticalCenter: parent.verticalCenter
         flow: Grid.TopToBottom
-        spacing: 50
+        spacing: 3
 
         Button {
             id: button1
@@ -108,12 +111,5 @@ Page {
             height: 100
             text: qsTr("9")
         }
-
-
-
-
-
-
-
     }
 }

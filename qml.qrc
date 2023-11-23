@@ -59,5 +59,16 @@
         <file>qml/heating/statistics/ZoneListView.qml</file>
         <file>qml/intercom/IncomingCallPopup.qml</file>
         <file>qml/intercom/IncomingCallPopupForm.ui.qml</file>
+        <file>MainPage.qml</file>
+        <file>MainPageForm.ui.qml</file>
+        <file>qml/lights/LightsScenes.qml</file>
+        <file>qml/lights/LightsScenesForm.ui.qml</file>
+        <file>qml/cameras/VideoPlayer.qml</file>
+        <file>qml/cameras/CamerasMainView.qml</file>
+        <file>qml/cameras/CamerasMainViewForm.ui.qml</file>
+        <file>qml/PasswordPopup.qml</file>
+        <file>qml/PasswordPopupForm.ui.qml</file>
+        <file>qml/PasswordButton.qml</file>
+        <file>resources/backspace-pict.png</file>
     </qresource>
 </RCC>

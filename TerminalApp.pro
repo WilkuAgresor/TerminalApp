@@ -4,6 +4,8 @@ include(risip/risip-voipsdk.pri)
 QT += quick widgets charts multimedia
 CONFIG += c++14
 
+#LIBS       += -lVLCQtCore -lVLCQtWidgets
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -17,11 +19,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     ../common/NetworkPortPool.cpp \
+    ../common/subsystems/AppBase.cpp \
     ../common/subsystems/heating/HeatingRetrieveMessage.cpp \
     ../common/subsystems/heating/HeatingRetrieveStatistics.cpp \
+    ../common/subsystems/schedule/ScheduleEventTypes.cpp \
     ../common/subsystems/topology/topologyMessages.cpp \
     ../common/subsystems/lights/LightControllerSettings.cpp \
     ../common/subsystems/lights/LightsRetrieveMessage.cpp \
+    alarm/AlarmMainView.cpp \
     heating/HeatingCommon.cpp \
     heating/HeatingStatistics.cpp \
     heating/zoneSettings/ZoneControl.cpp \
@@ -53,6 +58,7 @@ SOURCES += \
     Receiver.cpp \
     MessageHandler.cpp \
     ../common/subsystems/heating/HeatingZoneSettings.cpp \
+    monitoring/MonitoringApp.cpp \
     voiceCom/VoiceCom.cpp
 
 RESOURCES += qml.qrc
@@ -70,12 +76,16 @@ else: unix:!android: target.path = /home/pi/
 
 HEADERS += \
     ../common/NetworkPortPool.hpp \
+    ../common/subsystems/AppBase.hpp \
     ../common/subsystems/heating/HeatingRetrieveMessage.hpp \
     ../common/subsystems/heating/HeatingRetrieveStatistics.hpp \
+    ../common/subsystems/schedule/ScheduleDictionary.hpp \
+    ../common/subsystems/schedule/ScheduleEventTypes.hpp \
     ../common/subsystems/topology/topologyMessages.hpp \
     ../common/subsystems/lights/LightControllerSettings.hpp \
     ../common/subsystems/lights/LightsRetrieveMessage.hpp \
     ../common/subsystems/lights/LightsDictionary.hpp \
+    alarm/AlarmMainView.hpp \
     heating/HeatingCommon.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
@@ -110,8 +120,19 @@ HEADERS += \
     lights/lightControllers/DimmableLightController.hpp \
     lights/lightControllers/ILightController.hpp \
     lights/lightControllers/SimpleLightController.hpp \
+    monitoring/MonitoringApp.hpp \
     voiceCom/VoiceCom.hpp
 
 DISTFILES += \
     parter.png \
     pietro.png
+
+unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/ -lVLCQtCore
+
+INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+
+unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/ -lVLCQtQml
+
+INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include

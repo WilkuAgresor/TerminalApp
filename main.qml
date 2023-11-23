@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.12
 import "qml/heating"
 import "qml/lights"
 import "qml/alarm"
+import "qml/cameras"
 
 ApplicationWindow {
     id: window
@@ -20,44 +21,49 @@ ApplicationWindow {
     flags: Qt.Window | Qt.FramelessWindowHint
   //  visibility: Window.FullScreen
 
-    SplashForm {
-        id: splashScreen
-        visible: false
-        objectName: "splashScreen"
-
-        property int password: 0
-
-        function addAndValidate()
-        {
-            password = password + 1
-            if (password == 4) {
-                acceptPassword()
-            }
-        }
-
-        function acceptPassword()
-        {
-            visible = false
-            mainLayout.visible = true
-            tabBar.visible = true
-        }
-
-        button4.onClicked: {
-            addAndValidate()
-    }
-        button2.onClicked: {
-            addAndValidate()
-    }
-        button6.onClicked: {
-            addAndValidate()
-    }
-        button8.onClicked: {
-            addAndValidate()
+    MainPageForm {
+        id: mainPage
+        objectName: "mainPage"
     }
 
-    }
+//    SplashForm {
+//        id: splashScreen
+//        visible: false
+//        objectName: "splashScreen"
 
-    SwipeView {
+//        property int password: 0
+
+//        function addAndValidate()
+//        {
+//            password = password + 1
+//            if (password == 4) {
+//                acceptPassword()
+//            }
+//        }
+
+//        function acceptPassword()
+//        {
+//            visible = false
+//            mainLayout.visible = true
+//            tabBar.visible = true
+//        }
+
+//        button4.onClicked: {
+//            addAndValidate()
+//    }
+//        button2.onClicked: {
+//            addAndValidate()
+//    }
+//        button6.onClicked: {
+//            addAndValidate()
+//    }
+//        button8.onClicked: {
+//            addAndValidate()
+//    }
+
+//    }
+
+    StackLayout {
         id: mainLayout
         anchors.fill: parent
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
@@ -115,6 +121,9 @@ ApplicationWindow {
                 TabButton {
                     text: qsTr("Oświetlenie")
                 }
+                TabButton {
+                    text: qsTr("Sceny")
+                }
             }
         }
 
@@ -170,13 +179,18 @@ ApplicationWindow {
             objectName: "gatesForm"
 
         }
+        CamerasMainView {
+            objectName: "camerasMainPage"
+        }
     }
+
+
 
     footer: TabBar {
         id: tabBar
         contentHeight: 80
         currentIndex: mainLayout.currentIndex
-        visible: false
+        visible: true
         objectName: "tabBar"
 
 
@@ -194,6 +208,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("Bramy")
+        }
+        TabButton {
+            text: qsTr("Monitoring")
         }
     }
 }

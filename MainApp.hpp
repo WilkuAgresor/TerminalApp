@@ -11,6 +11,7 @@
 #include <Components.hpp>
 #include <Receiver.hpp>
 #include <risip.h>
+#include <monitoring/MonitoringApp.hpp>
 
 class MainApplication : public QObject
 {
@@ -25,4 +26,5 @@ private:
     QObject* mRootObject;
     Components* mComponents;
     TerminalReceiver* mReceiver;
+    MonitoringApp* mMonitoringApp;
 };
