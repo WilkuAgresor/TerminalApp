@@ -4,6 +4,7 @@
 #include <../common/subsystems/heating/HeatingZoneSettings.hpp>
 #include <heating/HeatingCurrentView.hpp>
 #include <heating/HeatingStatistics.hpp>
+#include <heating/HeatingBoilerSettings.hpp>
 
 #include <QNetworkDatagram>
 
@@ -24,4 +25,6 @@ private:
     QObject* mRootObject;
     HeatingCurrentView* mCurrentView;
     HeatingStatistics* mStatistics;
+    HeatingBoilerSettings* mBoilerSettings;
+
 };

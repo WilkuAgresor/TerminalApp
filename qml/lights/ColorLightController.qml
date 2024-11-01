@@ -1,10 +1,10 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 ColorLightControllerForm {
     id: dimmableLightForm
-    property var isOn: false
+    property bool isOn: false
 
     signal lightOnChanged(bool isOn)
     signal lightDimmChanged(int dimm)
@@ -40,6 +40,11 @@ ColorLightControllerForm {
     function setDimm( dimm )
     {
         slider.value = dimm
+    }
+
+    function setColor( color )
+    {
+        colorPicker.setColor( color )
     }
 
     mouseArea.onClicked: {

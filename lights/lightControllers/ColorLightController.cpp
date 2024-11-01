@@ -46,7 +46,9 @@ void ColorLightController::init()
                               Q_ARG(QVariant, QVariant(getIsOn())),
                               Q_ARG(QVariant, QVariant(getGuiSettings().mX)),
                               Q_ARG(QVariant, QVariant(getGuiSettings().mY))
-                              ,Q_ARG(QVariant, QVariant(getDimm())));
+                              ,Q_ARG(QVariant, QVariant(getDimm())),
+                              Q_ARG(QVariant, QVariant(getColor())));
+
     mControllerObject = mLightsViewObject->findChild<QObject*>(LIGHTS_COLOR_CONTROLLER_PREFIX + QString::number(getId()), Qt::FindChildOption::FindChildrenRecursively);
     if(mControllerObject == nullptr)
     {

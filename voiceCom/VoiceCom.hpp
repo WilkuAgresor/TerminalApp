@@ -1,9 +1,9 @@
 #pragma once
 #include <QObject>
 
-#include <risip.h>
-#include <risipcallmanager.h>
-#include <risipcall.h>
+//#include <risip.h>
+//#include <risipcallmanager.h>
+//#include <risipcall.h>
 
 class VoiceCom : public QObject
 {
@@ -15,12 +15,12 @@ public:
     void initiate();
 
 public slots:
-    void incomingCall(risip::RisipCall *call);
+    void incomingCall(/*risip::RisipCall *call*/);
 
 
 private:
-    risip::RisipEndpoint mRisipEndpoint;
-    risip::RisipAccountConfiguration* mRisipAccConfig;
-    risip::RisipAccount* mAccount;
+//    risip::RisipEndpoint mRisipEndpoint;
+//    risip::RisipAccountConfiguration* mRisipAccConfig;
+//    risip::RisipAccount* mAccount;
 };
 

@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick
 
 LightsMainViewForm {
     id: lightsMainView
@@ -43,9 +43,11 @@ LightsMainViewForm {
         object.setDimm(dimm)
     }
 
-    function addColorLightController(name, isOn, x, y, dimm)
+    function addColorLightController(name, isOn, x, y, dimm, color)
     {
         var component = Qt.createComponent("ColorLightController.qml")
+//        console.error("Errors:")
+//        console.error(component.errorString())
         var object = component.createObject(lightsMainView)
 
         object.objectName = "lightsColorControl_" + name
@@ -53,7 +55,7 @@ LightsMainViewForm {
         object.lightControllerY = y
         object.setStateInternal(isOn)
         object.setDimm(dimm)
-//        object.setColor(color)
+        object.setColor(color)
     }
 
     function populateSettingsSelector(entityList)

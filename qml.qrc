@@ -70,5 +70,10 @@
         <file>qml/PasswordPopupForm.ui.qml</file>
         <file>qml/PasswordButton.qml</file>
         <file>resources/backspace-pict.png</file>
+        <file>resources/refresh-icon.png</file>
+        <file>qml/heating/BoilerSettings.qml</file>
+        <file>qml/heating/BoilerSettingsForm.ui.qml</file>
+        <file>qml/heating/flame_icon_off.png</file>
+        <file>qml/heating/flame_icon_on.png</file>
     </qresource>
 </RCC>

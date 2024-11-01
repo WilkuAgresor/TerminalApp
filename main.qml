@@ -1,8 +1,8 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.VirtualKeyboard 2.12
-import QtQuick.Window 2.12
-import QtQuick.Layouts 1.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.VirtualKeyboard
+import QtQuick.Window
+import QtQuick.Layouts
 
 import "qml/heating"
 import "qml/lights"
@@ -66,7 +66,7 @@ ApplicationWindow {
     StackLayout {
         id: mainLayout
         anchors.fill: parent
-        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+        Layout.alignment: Qt.AlignTop
 
         currentIndex: tabBar.currentIndex
         visible: true
@@ -146,8 +146,8 @@ ApplicationWindow {
                 objectName: "heatingSetWidget"
             }
 
-            HeatingModesForm {
-                objectName: "heatingModesForm"
+            BoilerSettings {
+                objectName: "boilerSettings"
             }
 
             HeatingStatistics {
@@ -166,7 +166,7 @@ ApplicationWindow {
                 text: qsTr("Ustawienia temperatury")
             }
             TabButton {
-                text: qsTr("Ustawienia trybów pracy")
+                text: qsTr("Ustawienia kotła")
             }
             TabButton {
                 text: qsTr("Statystyka")

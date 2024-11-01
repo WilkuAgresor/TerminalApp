@@ -1,146 +1,166 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.0
-import VLCQtl 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtMultimedia
 
 CamerasMainViewForm {
     id: camerasMainPage
+    width: 1280
+    height: 600
 
-    Text {
-        id: monitoringStreamUrl
-        visible: false
-        text: qsTr("rtsp://admin:@192.168.100.206/stream=1")
-    }
+    Component {
+        id: dynamicCameraComponent
 
-    Rectangle {
-        x: 25
-        y: 25
-        width: parent.width - 50
-        height: parent.height - 50
-        color: "#00000000"
-        border.color: "#00000000"
+        GridLayout {
+            id: gridLayout
+            objectName: "camerasMainViewGrid"
 
-        Component {
-            id: monitoringVideoPlayer
-            VlcVideoPlayer {
-                anchors.fill: parent
-                id: monitoringVlcVideoPlayer
-                objectName: "monitoringVlcVideoPlayer"
-                url: monitoringStreamUrl.text
-                autoplay: true
-            }            
-        }
-
-        Loader {
             anchors.fill: parent
-            id: monitoringLoader
-            objectName: "cameraVideoLoader"
-            visible: true
-            active: visible
-            sourceComponent: monitoringVideoPlayer
+            anchors.margins: 5
+            columns: 3
+
+            property int activeCameraId : 1
+
+            VideoPlayer{
+                id: cam6
+                mouseAreaEnabled: true
+                position : 1
+                videoSource: "rtsp://admin:@192.168.100.206/stream=1"
+            }
+            VideoPlayer{
+                id: cam5
+                mouseAreaEnabled: true
+                videoSource: "rtsp://admin:@192.168.100.205/stream=1"
+            }
+            VideoPlayer{
+                id: cam4
+                mouseAreaEnabled: true
+                videoSource: "rtsp://admin:@192.168.100.204/stream=1"
+            }
+            VideoPlayer{
+                id: cam3
+                mouseAreaEnabled: true
+                videoSource: "rtsp://admin:@192.168.100.203/stream=1"
+            }
+            VideoPlayer{
+                id: cam2
+                mouseAreaEnabled: true
+                videoSource: "rtsp://admin:@192.168.100.202/stream=1"
+            }
+            VideoPlayer{
+                id: cam1
+                mouseAreaEnabled: true
+                videoSource: "rtsp://admin:@192.168.100.201/stream=1"
+            }
         }
     }
 
-
-    header: TabBar {
-        id: control
-        width: parent.width / 2
-
-        TabButton {
-            text: qsTr("Ulica")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.206/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Podjazd")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.203/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Ogród")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.202/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Taras")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.204/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Drewutnia")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.201/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Wybieg")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.205/stream=1"
-                monitoringLoader.visible = true
-            }
-        }
-        TabButton {
-            text: qsTr("Garaż")
-            width: Math.max(100, control.width / 7)
-            onClicked:
-            {
-//                monitoringStreamUrl.text = "rtsp://admin:@192.168.100.203/stream=1"
-                monitoringLoader.visible = false
-            }
-        }
-
-
+    Loader {
+        anchors.fill: parent
+        id: monitoringLoader
+        objectName: "CameraVideoLoader"
+        visible: true
+        active: false
+        sourceComponent: dynamicCameraComponent
     }
 
-    Timer {
-       id: updater
-       interval: 200
-       repeat: true
-       property int s: 0
-       onTriggered: {
-         switch (s) {
-         case 0:
-           monitoringLoader.visible = false
-           ++s
-           break
-         case 1:
-           ++s
-           break
-         case 2:
-             monitoringLoader.visible = true
-           s = 0
-           stop()
-         }
-       }
-     }
-
-    function refreshVideoPlayer()
+    function play()
     {
-        if(monitoringLoader.visible)
-        {
-            updater.start();
-        }
+        monitoringLoader.active = true
     }
+    function stop()
+    {
+        monitoringLoader.active = false
+    }
+
+
+    // function addCameraView(cameraName, streamUrl)
+    // {
+    //     var controllerObject = Qt.createComponent("VideoPlayer.qml")
+
+    //     var object = controllerObject.createObject(gridLayout, {videoSource:streamUrl})
+    //     object.play()
+
+    //     // object.objectName = "cameraView_" + cameraName
+    //     // object.setSource(streamUrl)
+    //     // object.setName(cameraName)
+    //     // object.play()
+    // }
+
+
+
+    // VideoPlayer
+    // {
+    //     id: player
+    // }
+
+    // header: TabBar {
+    //     id: control
+    //     width: parent.width / 2
+
+    //     TabButton {
+    //         text: qsTr("Ulica")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.206/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Podjazd")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.203/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Ogród")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.202/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Taras")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.204/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Drewutnia")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.201/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Wybieg")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             player.setSource("rtsp://admin:@192.168.100.205/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    //     TabButton {
+    //         text: qsTr("Garaż")
+    //         width: Math.max(100, control.width / 7)
+    //         onClicked:
+    //         {
+    //             //player.setSource("rtsp://admin:@192.168.100.203/stream=1")
+    //             player.play()
+    //         }
+    //     }
+    // }
 
 }

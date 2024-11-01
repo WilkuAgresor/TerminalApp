@@ -46,8 +46,6 @@ void DimmableLightController::setDimmToGui(int dimm)
 //from controller
 void DimmableLightController::handleSettingsChangeFromController(const LightControllerSettings &settings)
 {
-    qDebug() << "settings 2";
-
     if(settings.mDimmChanged && (settings.mDimm != mControllerSettings.mDimm))
     {
         mControllerSettings.mDimm = settings.mDimm;

@@ -15,7 +15,6 @@ public:
 
     virtual void handleSettingsChangeFromController(const LightControllerSettings &settings) override;
 
-
 public slots:
     void handleDimmChangeFromGui(int dimm);
 

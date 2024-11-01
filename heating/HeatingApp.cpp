@@ -9,7 +9,8 @@ HeatingApp::HeatingApp(QObject* rootObject, QObject *parent, Components *compone
       mComponents(components),
       mRootObject(rootObject),
       mCurrentView(new HeatingCurrentView(parent, rootObject, mComponents)),
-      mStatistics(new HeatingStatistics(parent, rootObject, mComponents))
+      mStatistics(new HeatingStatistics(parent, rootObject, mComponents)),
+      mBoilerSettings(new HeatingBoilerSettings(parent, rootObject, mComponents))
 {
 }
 
@@ -21,8 +22,14 @@ void HeatingApp::handleMessage(const Message &message, const QHostAddress &fromA
         handleReprovisionMessage(static_cast<const HeatSettingsMessage&>(message), fromAddress);
         // handleStatusUpdateMessage(static_cast<const HeatStatusMessage&>(message));
         break;
+
+    case MessageType::BOILER_SETTINGS:
+        mBoilerSettings->handleSettingsMessage(static_cast<const BoilerSettingsMessage&>(message));
+
+        break;
     default:
         qDebug()<< "unsupported message type in HEATING subsystem";
+        break;
     }
 }
 

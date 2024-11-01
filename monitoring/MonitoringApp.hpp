@@ -1,6 +1,8 @@
 #pragma once
 #include <QObject>
 #include <../common/subsystems/AppBase.hpp>
+#include <QQmlEngine>
+
 
 class Components;
 
@@ -16,4 +18,9 @@ public:
 private:
     QObject* mRootView;
     QObject* mCamerasMainPage;
+
+    QObject* mGrid;
+    QQmlEngine mEngine;
+    std::vector<QObject*> mCameras;
+
 };

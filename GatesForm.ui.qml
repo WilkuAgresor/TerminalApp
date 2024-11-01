@@ -1,6 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import VLCQtl 1.0
+import QtQuick
+import QtQuick.Controls
 
 Page {
     width: 1200
@@ -30,5 +29,4 @@ Page {
 //            url: "rtsp://admin:@192.168.100.206/stream=1"
 //        }
 //    }
-
 }

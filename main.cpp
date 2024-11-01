@@ -8,15 +8,15 @@
 #include <QPushButton>
 #include <QNetworkDatagram>
 #include <MainApp.hpp>
+#include <QUrl>
 
-#include <VLCQtCore/Common.h>
-#include <VLCQtQml/QmlVideoPlayer.h>
+//#include <VLCQtCore/Common.h>
+//#include <VLCQtQml/QmlVideoPlayer.h>
 
 #include <heating/HeatingCurrentView.hpp>
 
 #include <iostream>
 #include <QDateTime>
-
 
 static const QtMessageHandler QT_DEFAULT_MESSAGE_HANDLER = qInstallMessageHandler(0);
 
@@ -33,13 +33,13 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QNetworkDatagram>("QNetworkDatagram");
 
     QGuiApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+ //   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
     qInstallMessageHandler(myMessageOutput);
 
-    VlcCommon::setPluginPath(app.applicationDirPath() + "/plugins");
-    qmlRegisterType<VlcQmlVideoPlayer>("VLCQtl", 1, 0, "VlcVideoPlayer");
+//    VlcCommon::setPluginPath(app.applicationDirPath() + "/plugins");
+//    qmlRegisterType<VlcQmlVideoPlayer>("VLCQtl", 1, 0, "VlcVideoPlayer");
 
 //    VlcQmlVideoPlayer::registerPlugin();
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     qDebug() << "rootObjects size:" <<engine.rootObjects().size();
 
-    mainApp->initiate(engine.rootObjects().first());
+    mainApp->initiate(engine.rootObjects().first(), engine.rootContext());
 
     return app.exec();
 }

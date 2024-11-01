@@ -1,16 +1,13 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
-import QtQuick.Controls.Material 2.12
-import QtQuick.Controls.Styles 1.4
-
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 Item {
     id: colorLightController
     width: 45
     height: 45
     property alias mouseArea: mouseArea
-    property alias colorLightController: colorLightController
     property alias lightControllerY: colorLightController.y
     property alias lightControllerX: colorLightController.x
     property alias popup: popup

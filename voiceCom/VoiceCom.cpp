@@ -1,7 +1,7 @@
 #include "VoiceCom.hpp"
 #include <QDebug>
 
-#include <risipratemanager.h>
+//#include <risipratemanager.h>
 
 #include <chrono>
 #include <thread>
@@ -13,39 +13,39 @@ VoiceCom::VoiceCom(QObject *parent)
 
 VoiceCom::~VoiceCom()
 {
-    mAccount->logout();
-    mRisipEndpoint.stop();
+//    mAccount->logout();
+//    mRisipEndpoint.stop();
 }
 
 void VoiceCom::initiate()
 {
-    mRisipEndpoint.start();
+//    mRisipEndpoint.start();
 
-    mRisipAccConfig = new risip::RisipAccountConfiguration(this);
+//    mRisipAccConfig = new risip::RisipAccountConfiguration(this);
 
-    QString uri = "sip:terminal_pietro@192.168.0.150:5060";
-    mRisipAccConfig->setUri(uri);
-    mRisipAccConfig->setUserName("terminal_pietro");
-    mRisipAccConfig->setPassword("4444");
-    mRisipAccConfig->setServerAddress("192.168.0.150:5060");
+//    QString uri = "sip:terminal_pietro@192.168.0.150:5060";
+//    mRisipAccConfig->setUri(uri);
+//    mRisipAccConfig->setUserName("terminal_pietro");
+//    mRisipAccConfig->setPassword("4444");
+//    mRisipAccConfig->setServerAddress("192.168.0.150:5060");
 
-    mAccount = risip::Risip::instance()->createAccount(mRisipAccConfig);
+//    mAccount = risip::Risip::instance()->createAccount(mRisipAccConfig);
 
-    risip::Risip::instance()->setDefaultAccount(uri);
+//    risip::Risip::instance()->setDefaultAccount(uri);
 
-    mAccount->login();
+//    mAccount->login();
 
-    auto callManager = risip::RisipCallManager::instance();
-    callManager->setActiveAccount(mAccount);
+//    auto callManager = risip::RisipCallManager::instance();
+//    callManager->setActiveAccount(mAccount);
 
-    QObject::connect(callManager, SIGNAL(incomingCall(risip::RisipCall*)), this, SLOT(incomingCall(risip::RisipCall*)), Qt::QueuedConnection);
+//    QObject::connect(callManager, SIGNAL(incomingCall(risip::RisipCall*)), this, SLOT(incomingCall(risip::RisipCall*)), Qt::QueuedConnection);
 }
 
-void VoiceCom::incomingCall(risip::RisipCall* call)
+void VoiceCom::incomingCall(/*risip::RisipCall* call*/)
 {
     qDebug() << "INCOMING CALL SLOT";
-    using namespace std::chrono;
-    std::this_thread::sleep_for(seconds(1));
+//    using namespace std::chrono;
+//    std::this_thread::sleep_for(seconds(1));
 
-    call->answer();
+//    call->answer();
 }

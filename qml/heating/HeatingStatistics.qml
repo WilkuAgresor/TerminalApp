@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtCharts 2.11
+import QtQuick
+import QtCharts
 
 HeatingStatisticsForm {
     id: heatingStatistics

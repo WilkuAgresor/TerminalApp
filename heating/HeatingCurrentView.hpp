@@ -12,7 +12,7 @@
 #include <heating/zoneSettings/ZoneControl.hpp>
 #include <../common/subsystems/heating/HeatingZoneSettings.hpp>
 
-class Components;
+struct Components;
 
 class HeatingCurrentView : public QObject
 {

@@ -1,8 +1,7 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
-import QtQuick.Controls.Material 2.12
-import QtQuick.Controls.Styles 1.4
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 ColorPickerForm {
 
@@ -13,6 +12,11 @@ ColorPickerForm {
         var color = Qt.rgba(sliderR.value/255., sliderG.value/255., sliderB.value/255., 1)
         selectedColorBox.color = color;
         lightColorChanged(color)
+    }
+
+    function setColor( color )
+    {
+        selectedColorBox.color = color
     }
 
     sliderR.onValueChanged:

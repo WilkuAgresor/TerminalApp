@@ -3,6 +3,7 @@
 #include <QNetworkDatagram>
 #include <QDebug>
 #include <mutex>
+#include <QQmlContext>
 
 #include <../common/sender.hpp>
 #include <../common/receiver/receiver.hpp>
@@ -10,8 +11,9 @@
 
 #include <Components.hpp>
 #include <Receiver.hpp>
-#include <risip.h>
 #include <monitoring/MonitoringApp.hpp>
+#include <proximitySensor/ProximityMonitor.hpp>
+#include <healthcheck/HealthCheck.hpp>
 
 class MainApplication : public QObject
 {
@@ -20,11 +22,14 @@ public:
     explicit MainApplication(QObject *parent = nullptr);
     ~MainApplication();
 
-    void initiate(QObject* rootObject);
+    void initiate(QObject* rootObject, QQmlContext* context);
 
 private:
+    QQmlContext* mQmlContext;
     QObject* mRootObject;
     Components* mComponents;
     TerminalReceiver* mReceiver;
     MonitoringApp* mMonitoringApp;
+    ProximityMonitor* mProximityMonitor;
+    HealthCheck* mHealthCheck;
 };

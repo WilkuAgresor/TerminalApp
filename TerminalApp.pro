@@ -1,16 +1,13 @@
+QT += quick widgets charts multimedia core5compat multimediawidgets
+CONFIG += c++20
 
-include(risip/risip-voipsdk.pri)
-
-QT += quick widgets charts multimedia
-CONFIG += c++14
-
-#LIBS       += -lVLCQtCore -lVLCQtWidgets
+LIBS += -lpigpio
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+#DEFINES += QT_DEPRECATED_WARNINGS
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -20,13 +17,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     ../common/NetworkPortPool.cpp \
     ../common/subsystems/AppBase.cpp \
+    ../common/subsystems/heating/BoilerSettingsMessage.cpp \
     ../common/subsystems/heating/HeatingRetrieveMessage.cpp \
     ../common/subsystems/heating/HeatingRetrieveStatistics.cpp \
+    ../common/subsystems/heating/PumpSettingsMessage.cpp \
     ../common/subsystems/schedule/ScheduleEventTypes.cpp \
     ../common/subsystems/topology/topologyMessages.cpp \
     ../common/subsystems/lights/LightControllerSettings.cpp \
     ../common/subsystems/lights/LightsRetrieveMessage.cpp \
     alarm/AlarmMainView.cpp \
+    healthcheck/HealthCheck.cpp \
+    heating/HeatingBoilerSettings.cpp \
     heating/HeatingCommon.cpp \
     heating/HeatingStatistics.cpp \
     heating/zoneSettings/ZoneControl.cpp \
@@ -41,7 +42,6 @@ SOURCES += \
     heating/HeatingCurrentView.cpp \
     heating/HeatingApp.cpp \
     MainApp.cpp \
-    ../common/simplecrypt/simplecrypt.cpp \
     ../common/json/deviceJson.cpp \
     ../common/json/commonEntity.cpp \
     ../common/sender.cpp \
@@ -59,6 +59,8 @@ SOURCES += \
     MessageHandler.cpp \
     ../common/subsystems/heating/HeatingZoneSettings.cpp \
     monitoring/MonitoringApp.cpp \
+    proximitySensor/ProximityMonitor.cpp \
+    proximitySensor/tof.cpp \
     voiceCom/VoiceCom.cpp
 
 RESOURCES += qml.qrc
@@ -71,14 +73,18 @@ QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /home/pi/
+else: unix:!android: target.path = /home/kprus/
 !isEmpty(target.path): INSTALLS += target
+
+INCLUDEPATH += /home/kprus/rpi-sysroot/usr/include
 
 HEADERS += \
     ../common/NetworkPortPool.hpp \
     ../common/subsystems/AppBase.hpp \
+    ../common/subsystems/heating/BoilerSettingsMessage.hpp \
     ../common/subsystems/heating/HeatingRetrieveMessage.hpp \
     ../common/subsystems/heating/HeatingRetrieveStatistics.hpp \
+    ../common/subsystems/heating/PumpSettingsMessage.hpp \
     ../common/subsystems/schedule/ScheduleDictionary.hpp \
     ../common/subsystems/schedule/ScheduleEventTypes.hpp \
     ../common/subsystems/topology/topologyMessages.hpp \
@@ -86,11 +92,12 @@ HEADERS += \
     ../common/subsystems/lights/LightsRetrieveMessage.hpp \
     ../common/subsystems/lights/LightsDictionary.hpp \
     alarm/AlarmMainView.hpp \
+    healthcheck/HealthCheck.hpp \
+    heating/HeatingBoilerSettings.hpp \
     heating/HeatingCommon.hpp \
     heating/HeatingCurrentView.hpp \
     heating/HeatingApp.hpp \
     MainApp.hpp \
-    ../common/simplecrypt/simplecrypt.hpp \
     ../common/json/deviceJson.hpp \
     ../common/json/commonEntity.hpp \
     ../common/sender.hpp \
@@ -121,18 +128,23 @@ HEADERS += \
     lights/lightControllers/ILightController.hpp \
     lights/lightControllers/SimpleLightController.hpp \
     monitoring/MonitoringApp.hpp \
+    proximitySensor/tof.h \
+    proximitySensor/ProximityMonitor.hpp \
     voiceCom/VoiceCom.hpp
 
 DISTFILES += \
     parter.png \
-    pietro.png
+    pietro.png \
+    resources/icon_flame_off.jpg \
+    resources/icon_flame_on.jpg
 
-unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/ -lVLCQtCore
 
-INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
-DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+#unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/
 
-unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/ -lVLCQtQml
+#INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+#DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
 
-INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
-DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+#unix:!macx: LIBS += -L$$PWD/../../raspi/sysroot/usr/local/qt5pi/lib/
+
+#INCLUDEPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include
+#DEPENDPATH += $$PWD/../../raspi/sysroot/usr/local/qt5pi/include

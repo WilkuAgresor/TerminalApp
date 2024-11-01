@@ -66,6 +66,7 @@ void HeatingCurrentView::handleProfileSelection(int profileId)
     {
         auto& message = static_cast<HeatSettingsMessage&>(msg);
         auto payload = message.payload();
+
         mZoneFrontControl->addOrUpdateZoneSetting(payload.mZoneSettings);
     }
     setBusy(false);
